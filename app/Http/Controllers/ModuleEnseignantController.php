@@ -13,7 +13,9 @@ class ModuleEnseignantController extends Controller
     {
         // On récupère uniquement les utilisateurs qui ont le rôle 'Enseignant'
         $enseignants = User::where('role', 'Enseignant')->get();
-        $modules = Module::all();
+      // 2. On récupère UNIQUEMENT les modules qui n'ont pas d'enseignant rattaché
+    // OU ceux qui sont déjà rattachés à l'enseignant qu'on édite (optionnel)
+    $modules = Module::whereDoesntHave('enseignants')->get();
 
         return view('pages.admin.affectations.index', compact('enseignants', 'modules'));
     }

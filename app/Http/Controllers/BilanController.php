@@ -382,22 +382,55 @@ public function show($id)
 
     // ...
 
-    public function generatePDF(Request $request)
-    {
-        $classe_id = $request->classe_id;
-        if (!$classe_id) return back();
+    // public function generatePDF(Request $request)
+    // {
+    //     $classe_id = $request->classe_id;
+    //     if (!$classe_id) return back();
 
-        // On utilise la même logique que l'index
-        $data = $this->prepareBilanData($classe_id);
+    //     // On utilise la même logique que l'index
+    //     $data = $this->prepareBilanData($classe_id);
 
-        // On charge la vue spéciale PDF (qu'on va créer après)
-        $pdf = Pdf::loadView('pages.bilans.pdf', $data)
-            ->setPaper('a4', 'landscape'); // Important pour la largeur
+    //     // On charge la vue spéciale PDF (qu'on va créer après)
+    //     $pdf = Pdf::loadView('pages.bilans.pdf', $data)
+    //         ->setPaper('a4', 'landscape'); // Important pour la largeur
 
-        return $pdf->download('Synthese_Annuelle_' . now()->format('Y') . '.pdf');
-    }
+    //     return $pdf->download('Synthese_Annuelle_' . now()->format('Y') . '.pdf');
+    // }
 
-    
+    public function generatePDF($id)
+{
+    // 1. Récupérer l'étudiant avec ses relations
+    $etudiant = User::with([
+        'evaluations.module',
+        'inscriptions.specialite',
+        'inscriptions.anneeAcademique'
+    ])->findOrFail($id);
+
+    $anneeActive = AnneeAcademique::where('statut', true)->first();
+
+    // 2. Préparer les données pour la vue
+    $data = [
+        'etudiant'    => $etudiant,
+        'anneeActive' => $anneeActive,
+        'date'        => date('d/m/Y'),
+    ];
+
+    // 3. Charger la vue PDF (celle que tu as commencé à écrire)
+    // Assure-toi que le fichier s'appelle 'pages.bilans.releve_pdf' ou similaire
+    $pdf = Pdf::loadView('pages.bilans.releve_pdf', $data);
+
+    // 4. Configuration optionnelle (Portrait, A4)
+    $pdf->setPaper('a4', 'portrait');
+
+    // 5. Télécharger ou afficher
+    return $pdf->download('Releve_Notes_' . $etudiant->matricule . '.pdf');
+}
+
+
+
+
+
+
 
 
 
@@ -412,7 +445,7 @@ public function show($id)
         $etudiant = User::with([
             'evaluations.module',
             'inscriptions.specialite',
-            'inscriptions.classe',
+          
         ])->findOrFail($id);
 
         $anneeActive = AnneeAcademique::where('statut', true)->first();

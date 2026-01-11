@@ -29,18 +29,19 @@ class EvaluationController extends Controller
         // 1. Filtrage des Spécialités
 
         // 1. Filtrage des Spécialités
-        if ($user->role === 'Enseignant') {
-            // On récupère les IDs des modules du prof
-            $myModuleIds = $user->modulesEnseignes->pluck('id')->toArray();
+      // 1. Filtrage des Spécialités
+if ($user->role === 'Enseignant') {
+    // On récupère les IDs des modules du prof
+    $myModuleIds = $user->modulesEnseignes->pluck('id')->toArray();
 
-            // On cherche les spécialités qui possèdent ces modules
-            $specialites = Specialite::whereHas('modules', function ($q) use ($myModuleIds) {
-                $q->whereIn('id', $myModuleIds); // 'id' fait référence à la table modules ici
-            })->get();
-        } else {
-            $specialites = Specialite::all();
-        }
-
+    // On cherche les spécialités qui possèdent ces modules
+    $specialites = Specialite::whereHas('modules', function ($q) use ($myModuleIds) {
+        // CORRECTION : Précisez 'modules.id' pour lever l'ambiguïté
+        $q->whereIn('modules.id', $myModuleIds); 
+    })->get();
+} else {
+    $specialites = Specialite::all();
+}
 
 
         // Récupération des filtres
@@ -61,23 +62,67 @@ class EvaluationController extends Controller
 
         // 2. Chargement des modules filtrés par spécialité ET par attribution (si prof)
 
-        if ($specialite_id) {
+        // if ($specialite_id) {
 
-            $query = Module::where('specialite_id', $specialite_id);
-
-
-
-            if ($user->role === 'Enseignant') {
-
-                // On ne montre que SES modules au sein de cette spécialité
-
-                $query->whereIn('id', $user->modulesEnseignes->pluck('id'));
-            }
+        //     $query = Module::where('specialite_id', $specialite_id);
 
 
 
-            $modules = $query->get();
-        }
+        //     if ($user->role === 'Enseignant') {
+
+        //         // On ne montre que SES modules au sein de cette spécialité
+
+        //         $query->whereIn('id', $user->modulesEnseignes->pluck('id'));
+        //     }
+
+
+
+        //     $modules = $query->get();
+        // }
+
+
+
+
+
+// ... (début de ta fonction index)
+
+$modules = [];
+$etudiants = [];
+
+if ($specialite_id) {
+    // 1. On récupère la spécialité
+    $spe = Specialite::find($specialite_id);
+    
+    // 2. On prépare la récupération des modules liés
+    $query = $spe->modules(); 
+
+    // 3. ON FILTRE PAR SEMESTRE ICI
+    if ($semestre) {
+        // On transforme le chiffre (1 ou 2) en format S1 ou S2 si nécessaire
+        $formatSemestre = 'S' . $semestre; 
+        
+        // On dit à Laravel de regarder la colonne 'semestre' dans la table pivot
+        $query->wherePivot('semestre', $formatSemestre);
+    }
+
+    // 4. Si c'est un prof, on filtre encore pour ne montrer que SES matières
+    if ($user->role === 'Enseignant') {
+        $query->whereIn('modules.id', $user->modulesEnseignes->pluck('id'));
+    }
+
+    $modules = $query->get();
+}
+
+// ... (reste du code pour les étudiants)
+
+
+
+
+
+
+
+
+
 
 
 

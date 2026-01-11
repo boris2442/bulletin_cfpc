@@ -131,12 +131,25 @@
         </table>
 
         {{-- Récapitulatif Final --}}
-        @php
-            $mention = 'Passable';
-            if($moyFinale >= 16) $mention = 'Très Bien';
-            elseif($moyFinale >= 14) $mention = 'Bien';
-            elseif($moyFinale >= 12) $mention = 'Assez Bien';
-        @endphp
+@php
+    $moyFinale = $etudiant->calculerNoteFinale($anneeActive->id);
+    
+    if ($moyFinale >= 20) {
+        $mention = 'Parfait';
+    } elseif ($moyFinale >= 18) {
+        $mention = 'Excellent';
+    } elseif ($moyFinale >= 16) {
+        $mention = 'Très Bien';
+    } elseif ($moyFinale >= 14) {
+        $mention = 'Bien';
+    } elseif ($moyFinale >= 12) {
+        $mention = 'Assez Bien';
+    } elseif ($moyFinale >= 10) {
+        $mention = 'Passable';
+    } else {
+        $mention = 'Faible';
+    }
+@endphp
 
         <div class="mt-6 flex justify-between items-start">
             <div class="w-1/3">

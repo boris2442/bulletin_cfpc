@@ -3,6 +3,9 @@
 @section('content')
 {{-- Bloc Debug --}}
 
+
+
+
 <section>
 <div class="ml-0 md:ml-64 min-h-screen dark:bg-[#1F2937] antialiased transition-colors duration-300 content p-4 mt-14" >
 
@@ -116,6 +119,13 @@
                     <input type="hidden" name="module_id" value="{{ $moduleBilan->id }}">
 
                     <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-xl overflow-x-auto border border-green-800">
+@php 
+    // On filtre les modules normaux selon la valeur 'S1' ou 'S2' dans le pivot
+    $modsS1 = $modulesNormaux->filter(fn($m) => $m->pivot->semestre === 'S1');
+    $modsS2 = $modulesNormaux->filter(fn($m) => $m->pivot->semestre === 'S2');
+@endphp
+
+
                         <table class="w-full border-collapse text-[11px] uppercase tracking-tighter">
                     
 
@@ -129,29 +139,32 @@
         <th rowspan="2" class="border border-green-800 p-2 w-8">N°</th>
         <th rowspan="2" class="border border-green-800 p-2 min-w-[200px]">Nom et prénoms</th>
         
-        {{-- Semestre 1 : Colspan dynamique + 1 pour la moyenne --}}
-        <th colspan="{{ $modulesNormaux->where('semestre', 1)->count() + 1 }}" class="border border-green-800 p-1 text-center">S1 (30%)</th>
+        {{-- En-tête S1 --}}
+        <th colspan="{{ $modsS1->count() + 1 }}" class="border border-green-800 p-1 text-center">S1 (30%)</th>
         
-        {{-- Semestre 2 : Colspan dynamique + 1 pour la moyenne --}}
-        <th colspan="{{ $modulesNormaux->where('semestre', 2)->count() + 1 }}" class="border border-green-800 p-1 text-center">S2 (30%)</th>
+        {{-- En-tête S2 --}}
+        <th colspan="{{ $modsS2->count() + 1 }}" class="border border-green-800 p-1 text-center">S2 (30%)</th>
         
         <th rowspan="2" class="border border-green-800 bg-[#6aa84f] text-white p-2 w-24">Bilan (70%)</th>
         <th rowspan="2" class="border border-green-800 bg-[#f4cccc] text-red-700 p-2 w-24">MOY. GEN.</th>
     </tr>
 
     <tr class="bg-[#d9ead3] text-gray-700 border-b border-green-800">
-        {{-- Modules S1 --}}
-        @foreach($modulesNormaux->where('semestre', 1) as $mod)
-            <th class="border border-green-800 p-1 text-center w-12 text-[9px]">
-                {{ $mod->code_module ?? 'M' }}
+        {{-- Noms Modules S1 --}}
+        @foreach($modsS1 as $mod)
+            <th class="border border-green-800 p-1 text-center w-12 text-[9px]" title="{{ $mod->nom_module }}">
+                {{ $mod->code_module ?? 'M'.$mod->id }}
+                {{-- afficher le nom du module --}}
+                <i class="text-[8px]">{{ $mod->nom_module }}</i>
             </th>
         @endforeach
         <th class="border border-green-800 p-1 text-center bg-[#b6d7a8] font-bold italic">MOY S1</th>
 
-        {{-- Modules S2 --}}
-        @foreach($modulesNormaux->where('semestre', 2) as $mod)
-            <th class="border border-green-800 p-1 text-center w-12 text-[9px]">
-                {{ $mod->code_module ?? 'M' }}
+        {{-- Noms Modules S2 --}}
+        @foreach($modsS2 as $mod)
+            <th class="border border-green-800 p-1 text-center w-12 text-[9px]" title="{{ $mod->nom_module }}">
+                {{ $mod->code_module ?? 'M'.$mod->id }}
+                  <i class="text-[8px]">{{ $mod->nom_module }}</i>
             </th>
         @endforeach
         <th class="border border-green-800 p-1 text-center bg-[#b6d7a8] font-bold italic">MOY S2</th>
@@ -173,17 +186,12 @@
 
 
 
-
 <tbody class="divide-y divide-green-800">
     @foreach($etudiants as $index => $etudiant)
     <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700 transition">
-
-
-<td class="border border-green-800 p-2 text-center no-print">
-        <input type="checkbox" name="etudiant_ids[]" value="{{ $etudiant->id }}" class="etudiant-checkbox rounded border-gray-300 text-green-600 focus:ring-green-500">
-    </td>
-
-
+        <td class="border border-green-800 p-2 text-center no-print">
+            <input type="checkbox" name="etudiant_ids[]" value="{{ $etudiant->id }}" class="etudiant-checkbox rounded border-gray-300 text-green-600 focus:ring-green-500">
+        </td>
         <td class="border border-green-800 p-2 text-center font-bold">{{ $index + 1 }}</td>
         <td class="border border-green-800 p-2 font-bold text-left">
             <a href="{{ route('bilan.show', $etudiant->id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
@@ -191,52 +199,46 @@
             </a>
         </td>
 
-        {{-- BLOC SEMESTRE 1 : On affiche TOUS les modules, mais on force la recherche de la note S1 --}}
-     {{-- BLOC SEMESTRE 1 --}}
-@foreach($modulesNormaux->where('semestre', 1) as $mod)
-    @php 
-        $noteS1 = $etudiant->evaluations
-            ->where('module_id', $mod->id)
-            ->where('semestre', 1) 
-            ->first()?->note;
-    @endphp
-    <td class="border border-green-800 p-2 text-center">{{ $noteS1 ?? '-' }}</td>
-@endforeach
+        {{-- NOTES S1 --}}
+        @foreach($modsS1 as $mod)
+            @php 
+                $note = $etudiant->evaluations->where('module_id', $mod->id)->first()?->note;
+            @endphp
+            <td class="border border-green-800 p-2 text-center {{ $note < 10 && $note !== null ? 'text-red-600' : '' }}">
+                {{ $note ?? '-' }}
+            </td>
+        @endforeach
+        <td class="border border-green-800 p-2 text-center font-bold bg-[#edf2f7]">
+            {{ number_format($etudiant->moyenne_s1, 2) }}
+        </td>
 
-<td class="border border-green-800 p-2 text-center font-bold bg-[#edf2f7]">
-    {{ number_format($etudiant->moyenne_s1, 2) }}
-</td>
+        {{-- NOTES S2 --}}
+        @foreach($modsS2 as $mod)
+            @php 
+                $note = $etudiant->evaluations->where('module_id', $mod->id)->first()?->note;
+            @endphp
+            <td class="border border-green-800 p-2 text-center {{ $note < 10 && $note !== null ? 'text-red-600' : '' }}">
+                {{ $note ?? '-' }}
+            </td>
+        @endforeach
+        <td class="border border-green-800 p-2 text-center font-bold bg-[#edf2f7]">
+            {{ number_format($etudiant->moyenne_s2, 2) }}
+        </td>
 
-{{-- BLOC SEMESTRE 2 --}}
-@foreach($modulesNormaux->where('semestre', 2) as $mod)
-    @php 
-        $noteS2 = $etudiant->evaluations
-            ->where('module_id', $mod->id)
-            ->where('semestre', 2)
-            ->first()?->note;
-    @endphp
-    <td class="border border-green-800 p-2 text-center">{{ $noteS2 ?? '-' }}</td>
-@endforeach
-
-<td class="border border-green-800 p-2 text-center font-bold bg-[#edf2f7]">
-    {{ number_format($etudiant->moyenne_s2, 2) }}
-</td>
-
-        {{-- Note Bilan (70%) --}}
+        {{-- SAISIE BILAN --}}
         <td class="border border-green-800 p-0 bg-[#6aa84f]">
             <input type="number" step="0.01" name="notes[{{ $etudiant->id }}]" 
                    value="{{ $etudiant->evaluations->where('module_id', $moduleBilan->id)->first()?->note ?? '' }}"
                    class="w-full h-full bg-transparent text-white text-center font-bold p-2 outline-none border-none">
         </td>
 
-        {{-- Moyenne Générale --}}
-        <td class="border border-green-800 p-2 text-center font-bold text-red-600 bg-[#f4cccc]">
+        {{-- MOYENNE GENERALE --}}
+        <td class="border border-green-800 p-2 text-center font-bold {{ $etudiant->moyenne_generale < 10 ? 'text-red-600' : 'text-green-700' }} bg-[#f4cccc]">
             {{ number_format($etudiant->moyenne_generale, 2) }}
         </td>
     </tr>
     @endforeach
 </tbody>
-
 
 
 
