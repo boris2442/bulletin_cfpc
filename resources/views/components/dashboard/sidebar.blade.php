@@ -1,0 +1,204 @@
+<aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-16 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-neutral-900 dark:border-neutral-700 overflow-y-auto">
+    
+    <!-- Titre entreprise -->
+    <div class="flex items-center justify-center uppercase font-bold text-xl 
+                tracking-wide border-b border-gray-200 dark:border-neutral-700">
+       {{-- S.G.E.M.A --}}
+       <img src="{{ asset('images/logo.jpg') }}" alt="logo" class="w-12 h-12 m-2 rounded">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="mt-6 px-4 space-y-2">
+        <!-- Accueil -->
+        <a href=" /"  
+        title="retourner a l'accueil"
+        aria-label="Retournez a la page d'accueil"
+            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+               'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800'">
+            <i class="fas fa-home mr-3"></i> 
+            <span>Accueil</span>
+        </a>
+
+        <!-- Dashboard -->
+        <a href=" {{ route('tableau-de-bord') }}" 
+  title="Tableau de bord"
+        aria-label="  Voir le tableau de bord"     
+            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+                  'bg-blue-600  text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800'">
+            <i class="fas fa-chart-line mr-3"></i> 
+            <span>Tableau de bord</span>
+        </a>
+
+        <!-- Années Académiques -->
+     <a href="{{ route('annee-academiques.index') }}"
+     title="  Années académiques  "
+     aria-label=" Gérer les années académiques"  
+   class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+   {{ request()->routeIs('annee-academiques.*')
+        ? 'bg-[#F3F4F6] dark:bg-black text-gray-900 dark:text-white'
+        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+    
+    <i class="fas fa-calendar-alt mr-3"></i>
+    <span>Années Académiques</span>
+</a>
+
+{{-- Si les liens sont active on do --}}
+        <!-- Specialites -->
+        <a 
+            title="  Specialites  "
+     aria-label=" Gérer les Specialites"  
+        href="{{ route('specialites.index') }}"
+          class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+   {{ request()->routeIs('specialites.*')
+        ? 'bg-[#F3F4F6] text-gray-900'
+        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}" >
+            <i class="fas fa-graduation-cap mr-3"></i> 
+            <span>Specialites</span>
+        </a>
+
+        
+
+
+
+        <!-- Clients -->
+   <a href="{{ route('modules.index') }}"
+        title="  Modules  "
+     aria-label=" Gérer les Modules"  
+   class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+   {{ request()->routeIs('modules.*')
+        ? 'bg-[#F3F4F6] dark:bg-neutral-800 text-gray-900 dark:text-white'
+        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+    
+    <i class="fas fa-book mr-3"></i>
+    <span>Modules</span>
+</a>
+
+
+        <!-- Inscriptions -->
+        <a href="{{ route('inscriptions.index') }}"
+            title=" Inscriptions  "
+        aria-label=" Gérer les Inscriptions"
+            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+          {{ request()->routeIs('inscriptions.*')
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-user-graduate mr-3"></i> 
+            <span>Inscriptions</span>
+        </a>
+
+        <!-- Eva -->
+        <a href="{{ route('evaluations.index') }}"
+            title=" Evaluations  "
+        aria-label=" Gérer les Evaluations"
+            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+                 {{ request()->routeIs('evaluations.*')
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-file-alt mr-3"></i> 
+            <span>Evaluations</span>
+        </a>
+
+        <!-- Bilan general -->
+        <a 
+        href="{{ route('bilan.index') }}"
+               title=" Bilan general  "
+            aria-label="Gestion des bilans generaux"
+          class="
+          flex items-center py-2.5 px-4 rounded-lg transition duration-200
+          {{ request()->routeIs('bilan.index')
+            ? 'bg-blue-600 text-white'
+            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-chart-bar mr-3"></i> 
+            <span>Bilan general</span>
+        </a>
+        <!-- Affectation -->
+        <a 
+        href="{{ route('affectations.index') }}"
+            title=" Affectations  "
+            aria-label="Gestion des affectations"
+          class="
+          flex items-center py-2.5 px-4 rounded-lg transition duration-200
+          {{ request()->routeIs('affectations.index')
+            ? 'bg-blue-600 text-white'
+            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-chart-bar mr-3"></i> 
+            <span>Affectation</span>
+        </a>
+      
+
+<a href="{{ route('students.indexList') }}" 
+   class="flex items-center gap-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('students.*') ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+    </svg>
+    <span class="font-medium">Étudiants</span>
+</a>
+
+
+        <!--Utilisateurs-->
+        <a 
+        href="{{ route('users.index') }}"
+        title=" Utilisateurs  "
+        aria-label=" Gérer les Utilisateurs"
+          class="
+          flex items-center py-2.5 px-4 rounded-lg transition duration-200
+          {{ request()->routeIs('users.index')
+            ? 'bg-blue-600 text-white'
+            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-users mr-3"></i> 
+            <span>Utilisateurs</span>
+        </a>
+
+        <!-- Séparateur -->
+        <div class="border-t border-gray-200 dark:border-neutral-700 my-4"></div>
+
+        <!-- Déconnexion -->
+        <form method="POST" action="{{ route('logout') }}" class="mt-4">
+            @csrf
+            <button type="submit" 
+                    class="flex items-center w-full py-2.5 px-4 rounded-lg transition duration-200
+                           bg-red-500 hover:bg-red-600 text-white dark:hover:bg-red-700">
+                <i class="fas fa-sign-out-alt mr-3"></i> 
+                <span>Déconnexion</span>
+            </button>
+        </form>
+    </nav>
+</aside>
+
+<!-- Overlay mobile -->
+<div id="sidebar-overlay" 
+     class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden md:hidden" 
+     onclick="toggleSidebar()">
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isOpen = sidebar.classList.contains('translate-x-0');
+
+        if (isOpen) {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        } else {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+        }
+    }
+
+    // Initialisation au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        // Sur mobile, cacher la sidebar par défaut
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+        }
+    });
+</script>
