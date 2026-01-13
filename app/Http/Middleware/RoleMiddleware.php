@@ -13,14 +13,13 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
 
         // 1. Vérifier si l'utilisateur est connecté
-        // 2. Vérifier si son rôle correspond à celui attendu
-        if (!$request->user() || $request->user()->role !== $role) {
-            // Si non, on redirige ou on affiche une erreur 403 (Interdit)
-            abort(403, "Accès refusé : vous n'êtes pas " . $role);
+        // 2. Vérifier si son rôle est présent dans la liste des rôles autorisés
+        if (!$request->user() || !in_array($request->user()->role, $roles)) {
+            abort(403, "Accès refusé. Rôles autorisés : " . implode(', ', $roles));
         }
         return $next($request);
     }

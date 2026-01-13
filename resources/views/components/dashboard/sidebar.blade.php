@@ -112,7 +112,22 @@
             <span>Utilisateurs</span>
         </a>
 
- <!-- Bilan general -->
+ 
+
+
+
+@endif
+    
+@endauth
+
+        
+
+      
+@auth
+@if ( Auth::user()->role==='Administrateur' || Auth::user()->role==='secretaire')
+
+
+<!-- Bilan general -->
         <a 
         href="{{ route('bilan.index') }}"
                title=" Bilan general  "
@@ -126,19 +141,6 @@
             <span>Bilan general</span>
         </a>
       
-
-
-
-
-@endif
-    
-@endauth
-
-        
-
-      
-@auth
-@if ( Auth::user()->role==='Administrateur' || Auth::user()->role==='secretaire')
 
 
         <!-- Inscriptions -->
@@ -172,7 +174,7 @@
         
 
 @auth
-    @if (Auth::user()->role==='Enseignant' || Auth::user()->role==='Administrateur') 
+    @if (Auth::user()->role==='Enseignant' || Auth::user()->role==='Administrateur' || Auth::user()->role==='secretaire')  
         
  
 

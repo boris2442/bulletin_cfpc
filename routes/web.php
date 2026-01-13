@@ -14,7 +14,7 @@ use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\AnneeAcademiqueController;
 use App\Http\Controllers\ImportExportUserController;
 use App\Http\Controllers\ModuleEnseignantController;
-use App\Http\Controllers\ClasseController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,17 +32,18 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::group(['middleware' => ['web']], function () {
+Route::middleware(['web', 'auth', 'role:Administrateur'])->group(function () {
+
     Route::resource('annee-academiques', AnneeAcademiqueController::class);
 
     Route::put('annee-academiques/{annee_academique}/toggle-statut', [AnneeAcademiqueController::class, 'toggleStatut'])
         ->name('annee-academiques.toggle-statut');
-});
 
-// Route Resource pour la gestion des Spécialités
-Route::resource('specialites', SpecialiteController::class);
-// Routes pour la gestion des Modules
-Route::resource('modules', ModuleController::class);
+    // Route Resource pour la gestion des Spécialités
+    Route::resource('specialites', SpecialiteController::class);
+    // Routes pour la gestion des Modules
+    Route::resource('modules', ModuleController::class);
+});
 
 
 Route::prefix('inscriptions')->name('inscriptions.')->group(function () {
@@ -50,7 +51,7 @@ Route::prefix('inscriptions')->name('inscriptions.')->group(function () {
     Route::post('/store', [InscriptionController::class, 'store'])->name('store');
     Route::put('/{inscription}', [InscriptionController::class, 'update'])->name('update');
     Route::delete('/{inscription}', [InscriptionController::class, 'destroy'])->name('destroy');
-});
+})->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
 
 
 
@@ -61,7 +62,7 @@ Route::prefix('evaluations')->name('evaluations.')->group(function () {
 
     // Route pour enregistrer les notes en masse
     Route::post('/store', [EvaluationController::class, 'store'])->name('store');
-});
+})->middleware(['web', 'auth', 'role:Administrateur,Enseignant,secretaire']);
 
 
 // Groupe avec préfixe d'URL 'bilan' et préfixe de nom 'bilan.'
@@ -88,7 +89,7 @@ Route::prefix('bilan')->name('bilan.')->group(function () {
     // Note : J'ai déplacé 'bilan-general' ici pour qu'il devienne '/bilan/general'
     Route::get('/general', [BilanController::class, 'index'])->name('index');
     Route::post('/store', [BilanController::class, 'store'])->name('store');
-});
+})->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
 
 
 
@@ -121,28 +122,25 @@ Route::middleware(['auth'])->group(function () {
     // On la garde en dehors du groupe préfixé car Route::resource 
     // génère déjà automatiquement le préfixe 'users' et les noms 'users.*'
     Route::resource('users', UserController::class);
-});
+})->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
 
 
 // Route pour le tableau de bord
-Route::get('tableau-de-bord', [DashboardController::class, 'index'])->name('tableau-de-bord');
 
-Route::get('/affectations', [ModuleEnseignantController::class, 'index'])->name('affectations.index');
-Route::post('/affectations', [ModuleEnseignantController::class, 'store'])->name('affectations.store');
+Route::get('tableau-de-bord', [DashboardController::class, 'index'])->name('tableau-de-bord')->middleware(['web', 'auth', 'role:Administrateur']);
+
+Route::get('/affectations', [ModuleEnseignantController::class, 'index'])->name('affectations.index')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
+Route::post('/affectations', [ModuleEnseignantController::class, 'store'])->name('affectations.store')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
 // Suppression des affectations d'un enseignant
-Route::delete('/affectations/{id}', [ModuleEnseignantController::class, 'destroy'])->name('affectations.destroy');
-
-
+Route::delete('/affectations/{id}', [ModuleEnseignantController::class, 'destroy'])->name('affectations.destroy')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
 
 // Route pour l'espace étudiant
 Route::middleware(['auth'])->group(function () {
-    Route::get('/mes-notes', [StudentController::class, 'index'])->name('student.notes');
+    Route::get('/mes-notes', [StudentController::class, 'index'])->name('student.notes')->middleware(['web', 'auth', 'role:Etudiant']);
 
-    Route::get('/liste-etudiants', [StudentController::class, 'indexList'])->name('students.indexList');
+    Route::get('/liste-etudiants', [StudentController::class, 'indexList'])->name('students.indexList')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);
 });
 
 
-// Route pour la suppression multiple
-Route::post('classes/multi-delete', [ClasseController::class, 'multiDelete'])->name('classes.multi-delete');
-Route::resource('classes', ClasseController::class);
+
 require __DIR__ . '/auth.php';
