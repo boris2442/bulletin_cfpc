@@ -82,6 +82,9 @@ Route::get('/bilan-general', [BilanController::class, 'index'])->name('bilan.ind
 Route::post('/bilan-general/store', [BilanController::class, 'store'])->name('bilans.store');
 Route::get('/bilan/etudiant/{id}/pdf', [BilanController::class, 'downloadRelevePdf'])->name('releve.pdf');
 
+// Route pour calculer et remplir la table bilan_competences
+Route::post('/bilan/sync/{specialite_id}', [BilanController::class, 'genererSynthese'])->name('bilan.sync');
+
 Route::middleware(['auth'])->group(function () {
     // Cette route doit être placée AVANT le resource
     Route::post('users/import', [ImportExportUserController::class, 'store'])->name('users.import');

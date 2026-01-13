@@ -62,6 +62,15 @@
                         <button type="button" onclick="printSelectedTranscripts()" class="w-full text-left flex items-center gap-3 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 rounded-lg transition">
                             <span class="text-blue-500 italic">🖨️</span> Imprimer Relevés
                         </button>
+
+
+{{-- NOUVEAU BOUTON --}}
+    <button type="button" onclick="syncBilanTable()" class="w-full text-left flex items-center gap-3 px-3 py-2 text-xs font-semibold text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition">
+        <span class="text-purple-500 italic">🔄</span> Synchroniser la Table Bilan
+    </button>
+
+
+
                         <button type="button" onclick="document.getElementById('formBilan').submit()" class="w-full text-left flex items-center gap-3 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600 rounded-lg transition">
                             <span class="text-green-500 italic">💾</span> Sauvegarder Notes
                         </button>
@@ -356,7 +365,16 @@
         window.open(finalUrl, '_blank');
     }
 </script>
+{{-- À placer juste avant le @endsection --}}
+<form id="sync-bilan-form" action="{{ route('bilan.sync', request('specialite_id')) }}" method="POST" style="display: none;">
+    @csrf
+</form>
 
-
-
+<script>
+function syncBilanTable() {
+    if (confirm("Voulez-vous calculer et enregistrer définitivement les moyennes dans la table Bilan ? Cela mettra à jour les statistiques officielles.")) {
+        document.getElementById('sync-bilan-form').submit();
+    }
+}
+</script>
 @endsection

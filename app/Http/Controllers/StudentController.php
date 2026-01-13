@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Classe;
+use App\Models\Specialite;
 use Illuminate\Http\Request;
 use App\Models\AnneeAcademique;
 use App\Http\Controllers\Controller;
@@ -63,22 +64,15 @@ public function indexList(Request $request)
             $q->where('annee_academique_id', $anneeActive->id);
         })
         ->with(['inscriptions' => function($q) use ($anneeActive) {
-            // On ne charge que l'inscription de l'année en cours pour l'affichage
-            $q->where('annee_academique_id', $anneeActive->id)->with([ 'specialite']);
+            // On ne charge que l'inscription de l'année en cours et la spécialité
+            $q->where('annee_academique_id', $anneeActive->id)->with(['specialite']);
         }]);
 
-    // 3. Application des filtres (Seulement si l'utilisateur a rempli les champs)
+    // 3. Application des filtres
     if ($request->filled('search')) {
         $query->where(function($q) use ($request) {
             $q->where('name', 'like', "%{$request->search}%")
               ->orWhere('matricule', 'like', "%{$request->search}%");
-        });
-    }
-
-    if ($request->filled('classe_id')) {
-        $query->whereHas('inscriptions', function ($q) use ($request, $anneeActive) {
-            $q->where('classe_id', $request->classe_id)
-              ->where('annee_academique_id', $anneeActive->id);
         });
     }
 
@@ -89,21 +83,11 @@ public function indexList(Request $request)
         });
     }
 
-    if ($request->filled('niveau')) {
-        $query->whereHas('inscriptions', function ($q) use ($request, $anneeActive) {
-            $q->where('niveau', $request->niveau)
-              ->where('annee_academique_id', $anneeActive->id);
-        });
-    }
-
-    // 4. On récupère les résultats
+    // 4. Récupération des données
     $students = $query->latest()->paginate(15)->withQueryString();
-    
-    $classes = \App\Models\Classe::all();
-    $specialites = \App\Models\Specialite::all();
+    $specialites = Specialite::all();
 
-    return view('pages.student.indexList', compact('students', 'classes', 'specialites', 'anneeActive'));
+    return view('pages.student.indexList', compact('students', 'specialites', 'anneeActive'));
 }
-
 
 }

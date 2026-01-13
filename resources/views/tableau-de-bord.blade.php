@@ -122,34 +122,6 @@ class="ml-0 md:ml-64 min-h-screen  dark:bg-[#1F2937] antialiased transition-colo
         </div>
 
 
-         {{-- Tableau d'Honneur (Top 5) --}}
-        {{-- <div class="bg-white dark:bg-neutral-800 p-8 rounded-3xl shadow-sm border dark:border-neutral-700">
-            <h3 class="text-xl font-bold mb-6 dark:text-white">Tableau d'Honneur 🏆</h3>
-            <div class="space-y-6">
-                @forelse($performance['top_etudiants'] as $major)
-                <div class="flex items-center justify-between group">
-                    <div class="flex items-center gap-3">
-                        <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-400 flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:scale-110 transition-transform">
-                            {{ substr($major['nom'], 0, 1) }}
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold dark:text-white">{{ $major['nom'] ?? ''}}</p>
-                            <p class="text-xs text-gray-500">{{ $major['specialite'] }}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-black">
-                            {{ $major['moyenne']?? ""}}
-                        </span>
-                    </div>
-                </div>
-                @empty
-                <p class="text-center text-gray-500 py-10">Aucune donnée disponible</p>
-                @endforelse
-            </div>
-        </div> --}}
-
-
 {{-- SECTION : TABLEAUX D'HONNEUR MULTI-CRITÈRES --}}
 <div class="bg-white dark:bg-neutral-800 p-6 rounded-3xl shadow-sm border dark:border-neutral-700 mt-10">
     {{-- Header --}}
@@ -162,7 +134,7 @@ class="ml-0 md:ml-64 min-h-screen  dark:bg-[#1F2937] antialiased transition-colo
         {{-- Navigation Onglets --}}
         <div class="flex bg-gray-50 dark:bg-neutral-900/50 p-1 rounded-xl border dark:border-neutral-700 w-full sm:w-auto overflow-x-auto">
             <button onclick="switchTab('global')" id="btn-global" class="tab-btn active-tab flex-1 sm:flex-none whitespace-nowrap">Global</button>
-            <button onclick="switchTab('classe')" id="btn-classe" class="tab-btn flex-1 sm:flex-none whitespace-nowrap">Classes</button>
+          
             <button onclick="switchTab('spé')" id="btn-spé" class="tab-btn flex-1 sm:flex-none whitespace-nowrap">Spécialités</button>
         </div>
     </div>
@@ -191,24 +163,26 @@ class="ml-0 md:ml-64 min-h-screen  dark:bg-[#1F2937] antialiased transition-colo
             @endforelse
         </div>
 
-        {{-- Les autres IDs (tab-classe, tab-spé) suivent la même structure interne --}}
-        <div id="tab-classe" class="tab-content hidden space-y-4">
-             @foreach($performance['majors_classes'] as $classe => $major)
+        {{-- CONTENU : TOP SPÉ --}}
+        <div id="tab-spé" class="tab-content space-y-4 hidden">
+            @forelse($performance['majors_specialites'] as $specialite => $major)
                 <div class="flex items-center justify-between group p-3 hover:bg-gray-50 dark:hover:bg-neutral-700/30 rounded-2xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-neutral-600">
                     <div class="flex items-center gap-3">
-                        <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold text-xs shadow-sm">
-                            {{ substr($classe, 0, 1) }}
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-purple-600 to-pink-400 flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                            {{ substr($major['nom'], 0, 1) }}
                         </div>
                         <div>
                             <p class="text-xs font-black dark:text-white leading-none">{{ $major['nom'] }}</p>
-                            <p class="text-[9px] text-emerald-600 font-bold mt-1 uppercase">{{ $classe }}</p>
+                            <p class="text-[9px] text-gray-500 uppercase font-bold mt-1">{{ Str::limit($specialite, 20) }}</p>
                         </div>
                     </div>
-                    <span class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-lg text-[10px] font-black">
+                    <span class="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-lg text-[10px] font-black">
                         {{ number_format($major['moyenne'], 2) }}
                     </span>
                 </div>
-            @endforeach
+            @empty
+                <div class="text-center py-10 text-gray-400 text-xs">Aucune donnée</div>
+            @endforelse
         </div>
         
         {{-- ... Idem pour tab-spé --}}

@@ -127,34 +127,105 @@ public function show($id)
 
 
 
-    public function genererSynthese($specialite_id)
-    {
-        $anneeActive = AnneeAcademique::active();
+    // public function genererSynthese($specialite_id)
+    // {
+    //     $anneeActive = AnneeAcademique::active();
 
-        // Récupérer les étudiants de cette spécialité
-        $etudiants = User::whereHas('inscriptions', function ($q) use ($specialite_id, $anneeActive) {
-            $q->where('specialite_id', $specialite_id)
-                ->where('annee_academique_id', $anneeActive->id);
-        })->with('evaluations.module')->get();
+    //     // Récupérer les étudiants de cette spécialité
+    //     $etudiants = User::whereHas('inscriptions', function ($q) use ($specialite_id, $anneeActive) {
+    //         $q->where('specialite_id', $specialite_id)
+    //             ->where('annee_academique_id', $anneeActive->id);
+    //     })->with('evaluations.module')->get();
 
 
-        foreach ($etudiants as $etudiant) {
-            // 1. Calcul Moyenne Semestre 1 (Modules M1-M5)
-            $moyenneS1 = $etudiant->calculerMoyennePonderee(1);
+    //     foreach ($etudiants as $etudiant) {
+    //         // 1. Calcul Moyenne Semestre 1 (Modules M1-M5)
+    //         $moyenneS1 = $etudiant->calculerMoyennePonderee(1);
 
-            // 2. Calcul Moyenne Semestre 2 (Modules M6-M10)
-            $moyenneS2 = $etudiant->calculerMoyennePonderee(2);
+    //         // 2. Calcul Moyenne Semestre 2 (Modules M6-M10)
+    //         $moyenneS2 = $etudiant->calculerMoyennePonderee(2);
 
-            // 3. Moyenne des évaluations (30%)
-            $moyenneEvaluations = ($moyenneS1 + $moyenneS2) / 2;
+    //         // 3. Moyenne des évaluations (30%)
+    //         $moyenneEvaluations = ($moyenneS1 + $moyenneS2) / 2;
 
-            // 4. Note du Bilan (70%) - Supposons qu'on la récupère
-            $noteBilan = $etudiant->evaluations()->where('is_bilan', true)->first()?->note ?? 0;
+    //         // 4. Note du Bilan (70%) - Supposons qu'on la récupère
+    //         $noteBilan = $etudiant->evaluations()->where('is_bilan', true)->first()?->note ?? 0;
 
-            // 5. MOYENNE GÉNÉRALE FINALE
-            $moyenneFinale = ($moyenneEvaluations * 0.3) + ($noteBilan * 0.7);
-        }
+    //         // 5. MOYENNE GÉNÉRALE FINALE
+    //         $moyenneFinale = ($moyenneEvaluations * 0.3) + ($noteBilan * 0.7);
+
+
+
+
+
+
+
+
+
+
+
+
+            
+    //     }
+    // }
+
+
+
+
+
+
+
+
+
+public function genererSynthese($specialite_id)
+{
+    $anneeActive = AnneeAcademique::where('statut', true)->first();
+
+    // Récupérer les étudiants
+    $etudiants = User::whereHas('inscriptions', function ($q) use ($specialite_id, $anneeActive) {
+        $q->where('specialite_id', $specialite_id)
+          ->where('annee_academique_id', $anneeActive->id);
+    })->get();
+
+    foreach ($etudiants as $etudiant) {
+        // 1. Calculs (en utilisant tes méthodes existantes dans le modèle User)
+        $moyS1 = $etudiant->moyenneSemestre(1, $anneeActive->id);
+        $moyS2 = $etudiant->moyenneSemestre(2, $anneeActive->id);
+        
+        $moyenneEvaluations = ($moyS1 + $moyS2) / 2; // Moyenne CC (30%)
+        $noteBilan = $etudiant->evaluations()
+                              ->where('annee_academique_id', $anneeActive->id)
+                              ->whereHas('module', fn($q) => $q->where('is_bilan', true))
+                              ->first()?->note ?? 0;
+
+        $moyenneFinale = ($moyenneEvaluations * 0.3) + ($noteBilan * 0.7);
+
+        // 2. ENREGISTREMENT DANS LA TABLE bilan_competences
+        \App\Models\BilanCompetence::updateOrCreate(
+            [
+                'user_id' => $etudiant->id,
+                'annee_academique_id' => $anneeActive->id,
+            ],
+            [
+                'moyenne_semestre1'   => $moyS1,
+                'moyenne_semestre2'   => $moyS2,
+                'moyenne_competences' => $moyenneEvaluations,
+                'moyenne_generale'    => $moyenneFinale,
+                'observations'        => $moyenneFinale >= 10 ? 'Admis' : 'Échec',
+            ]
+        );
     }
+
+    return back()->with('success', 'La table Bilan des Compétences a été mise à jour !');
+}
+
+
+
+
+
+
+
+
 
 
     public function store(Request $request)

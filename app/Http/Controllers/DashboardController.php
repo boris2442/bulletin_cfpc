@@ -103,13 +103,13 @@ class DashboardController extends Controller
 private function getPerformanceAcademique($anneeId)
 {
     $inscriptions = Inscription::where('annee_academique_id', $anneeId)
-        ->with(['etudiant.evaluations.module', 'specialite', 'classe'])
+        ->with(['etudiant.evaluations.module', 'specialite'])
         ->get();
 
     $data = [
         'global' => [],
         'par_specialite' => [],
-        'par_classe' => [],
+
         'stats' => ['admis' => 0, 'total_notes' => 0]
     ];
 
@@ -122,13 +122,13 @@ private function getPerformanceAcademique($anneeId)
             'nom' => $ins->etudiant->name,
             'moyenne' => round($moyenne, 2),
             'specialite' => $ins->specialite->nom_specialite,
-            'classe' => $ins->classe->nom_classe ?? 'N/A'
+    
         ];
 
         // Remplir les différents tableaux
         $data['global'][] = $studentData;
         $data['par_specialite'][$ins->specialite->nom_specialite][] = $studentData;
-        $data['par_classe'][$ins->classe->nom_classe ?? 'Sans Classe'][] = $studentData;
+
     }
 
     // Tri des données pour extraire les majors
@@ -142,17 +142,13 @@ private function getPerformanceAcademique($anneeId)
         $data['par_specialite'][$key] = $data['par_specialite'][$key][0]; // Le major de la spé
     }
 
-    foreach ($data['par_classe'] as $key => $students) {
-        usort($data['par_classe'][$key], $sortFn);
-        $data['par_classe'][$key] = $data['par_classe'][$key][0]; // Le major de la classe
-    }
-
+   
     return [
         'taux_reussite' => $inscriptions->count() > 0 ? round(($data['stats']['admis'] / $inscriptions->count()) * 100, 2) : 0,
         'moyenne_generale' => $inscriptions->count() > 0 ? round($data['stats']['total_notes'] / $inscriptions->count(), 2) : 0,
         'top_global' => array_slice($data['global'], 0, 5),
         'majors_specialites' => $data['par_specialite'],
-        'majors_classes' => $data['par_classe']
+     
     ];
 }
 
