@@ -68,22 +68,25 @@
     </div>
 
     {{-- Informations détaillées --}}
-    <div class="info-section">
-        <table class="info-grid">
-            <tr>
-                <td width="15%"><strong>ANNÉE ACADÉMIQUE :</strong></td>
-                <td width="35%">{{ $anneeActive->date_debut->format('Y') }} - {{ $anneeActive->date_fin->format('Y') }}</td>
-                <td width="15%"><strong>FILIÈRE :</strong></td>
-                <td width="35%"  style="text-transform: uppercase;"> <strong>{{ $classe->specialite->nom_specialite }} </strong></td>
-            </tr>
-            <tr>
-                <td><strong>CLASSE :</strong></td>
-                <td>{{ $classe->nom_classe }}</td>
-                <td><strong>DATE :</strong></td>
-                <td>{{ date('d/m/Y') }}</td>
-            </tr>
-        </table>
-    </div>
+   {{-- Informations détaillées --}}
+<div class="info-section">
+    <table class="info-grid">
+        <tr>
+            <td width="15%"><strong>SESSION :</strong></td>
+            <td width="35%">{{ $anneeActive->date_debut->format('Y') }} - {{ $anneeActive->date_fin->format('Y') }}</td>
+            <td width="15%"><strong>FORMATION :</strong></td>
+            <td width="35%" style="text-transform: uppercase;"> 
+                <strong>{{ $specialite->nom_specialite }}</strong> 
+            </td>
+        </tr>
+        <tr>
+            <td><strong>DATE D'ÉDITION :</strong></td>
+            <td>{{ date('d/m/Y') }}</td>
+            <td><strong>RÉFÉRENCE :</strong></td>
+            <td>MINEFOP/CFP-LC/{{ date('Y') }}</td>
+        </tr>
+    </table>
+</div>
 
     {{-- Tableau des Résultats --}}
     <table class="results">
@@ -157,7 +160,7 @@
         <table style="width: 100%; border-collapse: collapse; font-size: 8px;">
             <thead>
                 <tr style="background-color: #eee;">
-                    <th colspan="2" style="border: 1px solid #000; padding: 4px;">STATISTIQUES DE LA CLASSE</th>
+                    <th colspan="2" style="border: 1px solid #000; padding: 4px;">STATISTIQUES DE LA FORMATION</th>
                 </tr>
             </thead>
             <tbody>
@@ -180,7 +183,7 @@
                     </td>
                 </tr>
                 <tr style="background-color: #f9f9f9;">
-                    <td style="border: 1px solid #000; padding: 3px;">Moyenne de Classe</td>
+                    <td style="border: 1px solid #000; padding: 3px;">Moyenne de Formation</td>
                     <td style="border: 1px solid #000; padding: 3px; font-weight: bold;">{{ number_format($stats['moyenne_classe'], 2) }} / 20</td>
                 </tr>
             </tbody>

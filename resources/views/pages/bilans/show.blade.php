@@ -81,53 +81,76 @@
                     <th class="border border-black p-2 w-24 text-center bg-gray-300">Points</th>
                 </tr>
             </thead>
-            <tbody>
-                @php $ptsS1 = 0; $coefS1 = 0; @endphp
-                <tr class="bg-gray-100 font-bold"><td colspan="4" class="border border-black p-1 px-4 italic">PREMIÈRE PÉRIODE</td></tr>
-                @foreach($etudiant->evaluations->where('semestre', 1)->where('module.is_bilan', false) as $eval)
-                    @php 
-                        $c = $eval->module->coef_module ?? 1;
-                        $p = $eval->note * $c;
-                        $ptsS1 += $p; $coefS1 += $c;
-                    @endphp
-                    <tr>
-                        <td class="border border-black p-2 italic">{{ $eval->module->nom_module }}</td>
-                        <td class="border border-black p-2 text-center">{{ $c }}</td>
-                        <td class="border border-black p-2 text-center">{{ number_format($eval->note, 2) }}</td>
-                        <td class="border border-black p-2 text-center font-bold">{{ number_format($p, 2) }}</td>
-                    </tr>
-                @endforeach
+          <tbody>
+    {{-- SEMESTRE 1 --}}
+    @php $ptsS1 = 0; $coefS1 = 0; @endphp
+    <tr class="bg-gray-100 font-bold"><td colspan="4" class="border border-black p-1 px-4 italic uppercase">PREMIÈRE PÉRIODE (Semestre 1)</td></tr>
+    @foreach($etudiant->evaluations->where('semestre', 1)->where('module.is_bilan', false) as $eval)
+        @php 
+            $c = $eval->module->coef_module ?? 1;
+            $p = $eval->note * $c;
+            $ptsS1 += $p; $coefS1 += $c;
+        @endphp
+        <tr>
+            <td class="border border-black p-2 italic">{{ $eval->module->nom_module }}</td>
+            <td class="border border-black p-2 text-center">{{ $c }}</td>
+            <td class="border border-black p-2 text-center">{{ number_format($eval->note, 2) }}</td>
+            <td class="border border-black p-2 text-center">{{ number_format($p, 2) }}</td>
+        </tr>
+    @endforeach
+    {{-- Sous-total Semestre 1 --}}
+    <tr class="bg-gray-50 font-bold">
+        <td class="border border-black p-2 text-right uppercase">Sous-total Semestre 1:</td>
+        <td class="border border-black p-2 text-center">{{ $coefS1 }}</td>
+        <td class="border border-black p-2 bg-gray-100"></td>
+        <td class="border border-black p-2 text-center">{{ number_format($ptsS1, 2) }}</td>
+    </tr>
 
-                @php $ptsS2 = 0; $coefS2 = 0; @endphp
-                <tr class="bg-gray-100 font-bold"><td colspan="4" class="border border-black p-1 px-4 border-t-2 italic">DEUXIÈME PÉRIODE</td></tr>
-                @foreach($etudiant->evaluations->where('semestre', 2)->where('module.is_bilan', false) as $eval)
-                    @php 
-                        $c = $eval->module->coef_module ?? 1;
-                        $p = $eval->note * $c;
-                        $ptsS2 += $p; $coefS2 += $c;
-                    @endphp
-                    <tr>
-                        <td class="border border-black p-2 italic">{{ $eval->module->nom_module }}</td>
-                        <td class="border border-black p-2 text-center">{{ $c }}</td>
-                        <td class="border border-black p-2 text-center">{{ number_format($eval->note, 2) }}</td>
-                        <td class="border border-black p-2 text-center font-bold">{{ number_format($p, 2) }}</td>
-                    </tr>
-                @endforeach
+    {{-- SEMESTRE 2 --}}
+    @php $ptsS2 = 0; $coefS2 = 0; @endphp
+    <tr class="bg-gray-100 font-bold border-t-2 border-black"><td colspan="4" class="border border-black p-1 px-4 italic uppercase">DEUXIÈME PÉRIODE (Semestre 2)</td></tr>
+    @foreach($etudiant->evaluations->where('semestre', 2)->where('module.is_bilan', false) as $eval)
+        @php 
+            $c = $eval->module->coef_module ?? 1;
+            $p = $eval->note * $c;
+            $ptsS2 += $p; $coefS2 += $c;
+        @endphp
+        <tr>
+            <td class="border border-black p-2 italic">{{ $eval->module->nom_module }}</td>
+            <td class="border border-black p-2 text-center">{{ $c }}</td>
+            <td class="border border-black p-2 text-center">{{ number_format($eval->note, 2) }}</td>
+            <td class="border border-black p-2 text-center">{{ number_format($p, 2) }}</td>
+        </tr>
+    @endforeach
+    {{-- Sous-total Semestre 2 --}}
+    <tr class="bg-gray-50 font-bold">
+        <td class="border border-black p-2 text-right uppercase">Sous-total Semestre 2:</td>
+        <td class="border border-black p-2 text-center">{{ $coefS2 }}</td>
+        <td class="border border-black p-2 bg-gray-100"></td>
+        <td class="border border-black p-2 text-center">{{ number_format($ptsS2, 2) }}</td>
+    </tr>
 
-                {{-- SYNTHÈSE EXAMEN FINAL (70%) --}}
-                @php 
-                    $evalBilan = $etudiant->evaluations->where('module.is_bilan', true)->first();
-                    $moyFinale = $etudiant->calculerNoteFinale($anneeActive->id);
-                @endphp
-                @if($evalBilan)
-                <tr class="bg-green-50 font-black border-t-4 border-black">
-                    <td class="border border-black p-3 uppercase">EXAMEN DE FIN DE FORMATION (70%)</td>
-                    <td class="border border-black p-2 text-center">1</td>
-                    <td class="border border-black p-2 text-center text-lg">{{ number_format($evalBilan->note, 2) }}</td>
-                    <td class="border border-black p-2 text-center text-lg">{{ number_format($evalBilan->note, 2) }}</td>
-                </tr>
-                @endif
-            </tbody>
+    {{-- TOTAL GÉNÉRAL DES MODULES --}}
+    <tr class="bg-blue-50 font-black border-t-2 border-black text-[12px]">
+        <td class="border border-black p-2 text-right uppercase">TOTAL GÉNÉRAL (CC):</td>
+        <td class="border border-black p-2 text-center">{{ $coefS1 + $coefS2 }}</td>
+        <td class="border border-black p-2 text-center">Moy: {{ ($coefS1+$coefS2) > 0 ? number_format(($ptsS1+$ptsS2)/($coefS1+$coefS2), 2) : '0.00' }}</td>
+        <td class="border border-black p-2 text-center">{{ number_format($ptsS1 + $ptsS2, 2) }}</td>
+    </tr>
+
+    {{-- SYNTHÈSE EXAMEN FINAL (70%) --}}
+    @php 
+        $evalBilan = $etudiant->evaluations->where('module.is_bilan', true)->first();
+    @endphp
+    @if($evalBilan)
+    <tr class="bg-yellow-50 font-black border-t-4 border-black">
+        <td class="border border-black p-3 uppercase">EXAMEN DE FIN DE FORMATION (70%)</td>
+        <td class="border border-black p-2 text-center">1</td>
+        <td class="border border-black p-2 text-center text-lg">{{ number_format($evalBilan->note, 2) }}</td>
+        <td class="border border-black p-2 text-center text-lg">{{ number_format($evalBilan->note, 2) }}</td>
+    </tr>
+    @endif
+</tbody>
         </table>
 
         {{-- Récapitulatif Final --}}

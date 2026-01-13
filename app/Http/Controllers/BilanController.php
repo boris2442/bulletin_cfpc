@@ -18,32 +18,6 @@ class BilanController extends Controller
 
 
 
-
-
-    // public function index(Request $request)
-    // {
-    //     $anneeActive = AnneeAcademique::where('statut', true)->first();
-    //     $classes = Classe::with('specialite')->get();
-    //     $classe_id = $request->classe_id;
-
-    //     $etudiants = collect();
-    //     $modulesNormaux = collect();
-    //     $moduleBilan = null;
-    //     $stats = [];
-
-    //     if ($classe_id) {
-    //         // On appelle la fonction "cerveau" ci-dessous
-    //         $data = $this->prepareBilanData($classe_id);
-
-    //         $etudiants = $data['etudiants'];
-    //         $modulesNormaux = $data['modulesNormaux'];
-    //         $moduleBilan = $data['moduleBilan'];
-    //         $stats = $data['stats'];
-    //     }
-
-    //     return view('pages.bilans.index', compact('etudiants', 'modulesNormaux', 'moduleBilan', 'classes', 'anneeActive', 'stats'));
-    // }
-
 public function index(Request $request)
 {
     $anneeActive = AnneeAcademique::where('statut', true)->first();
@@ -67,143 +41,6 @@ public function index(Request $request)
 
     return view('pages.bilans.index', compact('etudiants', 'modulesNormaux', 'moduleBilan', 'specialites', 'anneeActive', 'stats'));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // private function prepareBilanData($classe_id)
-    // {
-    //     $anneeActive = AnneeAcademique::where('statut', true)->first();
-    //     $classe = Classe::with('specialite')->findOrFail($classe_id);
-
-    //     $modulesNormaux = Module::where('specialite_id', $classe->specialite_id)
-    //         ->where('is_bilan', false)->get();
-
-    //     $moduleBilan = Module::where('specialite_id', $classe->specialite_id)
-    //         ->where('is_bilan', true)->first();
-
-    //     $etudiants = User::whereHas('inscriptions', function ($q) use ($classe_id, $anneeActive) {
-    //         $q->where('classe_id', $classe_id)->where('annee_academique_id', $anneeActive->id);
-    //     })
-    //         ->with(['evaluations' => function ($q) use ($anneeActive) {
-    //             $q->where('annee_academique_id', $anneeActive->id);
-    //         }])->get();
-
-    //     // Calcul pour chaque étudiant
-    //     $etudiants->each(function ($etudiant) use ($modulesNormaux, $anneeActive) {
-    //         // On délègue les calculs complexes au modèle User
-    //         $etudiant->moyenne_s1 = $etudiant->moyenneSemestre(1, $anneeActive->id);
-    //         $etudiant->moyenne_s2 = $etudiant->moyenneSemestre(2, $anneeActive->id);
-    //         $etudiant->moyenne_generale = $etudiant->calculerNoteFinale($anneeActive->id);
-    //     });
-
-    //     // Statistiques de classe
-    //     $moyennes = $etudiants->pluck('moyenne_generale');
-    //     $stats = [
-    //         'total' => $etudiants->count(),
-    //         'admis' => $moyennes->filter(fn($m) => $m >= 10)->count(),
-    //         'echoues' => $moyennes->filter(fn($m) => $m < 10)->count(),
-    //         'moyenne_classe' => $moyennes->avg() ?? 0,
-    //         'meilleure_note' => $moyennes->max() ?? 0,
-    //         'moins_bonne' => $moyennes->min() ?? 0,
-    //     ];
-
-    //     return compact('etudiants', 'modulesNormaux', 'moduleBilan', 'anneeActive', 'classe', 'stats');
-    // }
-
-
-
-// private function prepareBilanData($specialite_id)
-// {
-//     $anneeActive = AnneeAcademique::where('statut', true)->first();
-//     $specialite = Specialite::findOrFail($specialite_id);
-
-//     // Les modules de la formation (Spécialité)
-//     $modulesNormaux = Module::where('specialite_id', $specialite_id)
-//         ->where('is_bilan', false)->get();
-
-//     $moduleBilan = Module::where('specialite_id', $specialite_id)
-//         ->where('is_bilan', true)->first();
-
-//     // On récupère les étudiants inscrits directement dans la SPÉCIALITÉ
-//     $etudiants = User::whereHas('inscriptions', function ($q) use ($specialite_id, $anneeActive) {
-//         $q->where('specialite_id', $specialite_id)
-//           ->where('annee_academique_id', $anneeActive->id);
-//     })
-//     ->with(['evaluations' => function ($q) use ($anneeActive) {
-//         $q->where('annee_academique_id', $anneeActive->id);
-//     }])->get();
-
-//     // Calculs
-//     $etudiants->each(function ($etudiant) use ($anneeActive) {
-//         $etudiant->moyenne_s1 = $etudiant->moyenneSemestre(1, $anneeActive->id);
-//         $etudiant->moyenne_s2 = $etudiant->moyenneSemestre(2, $anneeActive->id);
-//         $etudiant->moyenne_generale = $etudiant->calculerNoteFinale($anneeActive->id);
-//     });
-
-//     $moyennes = $etudiants->pluck('moyenne_generale');
-//     $stats = [
-//         'total' => $etudiants->count(),
-//         'admis' => $moyennes->filter(fn($m) => $m >= 10)->count(),
-//         'echoues' => $moyennes->filter(fn($m) => $m < 10)->count(),
-//         'moyenne_formation' => $moyennes->avg() ?? 0,
-//     ];
-
-//     return compact('etudiants', 'modulesNormaux', 'moduleBilan', 'anneeActive', 'specialite', 'stats');
-// }
-
-
-
-
-
-
-// private function prepareBilanData($specialite_id)
-// {
-//     $anneeActive = AnneeAcademique::where('statut', true)->first();
-//     $specialite = Specialite::findOrFail($specialite_id);
-
-//     // On récupère les modules RATTACHÉS à cette spécialité via le pivot
-//     $modulesFormation = $specialite->modules()
-//         ->withPivot('semestre', 'ordre') // On demande explicitement le pivot
-//         ->orderBy('module_specialite.ordre')
-//         ->get();
-
-//     // On filtre : modules normaux vs module bilan
-//     $modulesNormaux = $modulesFormation->where('is_bilan', false);
-//     $moduleBilan = $modulesFormation->where('is_bilan', true)->first();
-
-//     $etudiants = User::whereHas('inscriptions', function ($q) use ($specialite_id, $anneeActive) {
-//         $q->where('specialite_id', $specialite_id)
-//           ->where('annee_academique_id', $anneeActive->id);
-//     })
-//     ->with(['evaluations' => function ($q) use ($anneeActive) {
-//         $q->where('annee_academique_id', $anneeActive->id);
-//     }])->get();
-
-//     // Calculs
-//     $etudiants->each(function ($etudiant) use ($anneeActive) {
-//         $etudiant->moyenne_s1 = $etudiant->moyenneSemestre(1, $anneeActive->id);
-//         $etudiant->moyenne_s2 = $etudiant->moyenneSemestre(2, $anneeActive->id);
-//         $etudiant->moyenne_generale = $etudiant->calculerNoteFinale($anneeActive->id);
-//     });
-
-//     // ... reste des stats
-//     return compact('etudiants', 'modulesNormaux', 'moduleBilan', 'anneeActive', 'specialite');
-// }
-
-
-
 
 
 
@@ -252,33 +89,6 @@ private function prepareBilanData($specialite_id)
 }
 
 
-
-
-
-
-
-    /**
-     * Affiche le bilan individuel d'un étudiant (optionnel)
-     */
-    // public function show($id)
-    // {
-    //     // On ajoute 'inscriptions.classe' pour l'afficher sur le relevé
-    //     $etudiant = User::with([
-    //         'evaluations.module',
-    //         'inscriptions.specialite',
-    //         'inscriptions.classe',
-    //         //MAtricule peut être ajouté ici si besoin
-
-    //     ])->findOrFail($id);
-    //     $anneeActive = AnneeAcademique::where('statut', true)->first();
-
-    //     // On utilise les méthodes de calcul définies dans le modèle User
-    //     $moyenneS1 = $etudiant->moyenneSemestre(1, $anneeActive->id);
-    //     $moyenneS2 = $etudiant->moyenneSemestre(2, $anneeActive->id);
-    //     $moyenneFinale = $etudiant->calculerNoteFinale($anneeActive->id);
-
-    //     return view('pages.bilans.show', compact('etudiant', 'anneeActive', 'moyenneS1', 'moyenneS2', 'moyenneFinale'));
-    // }
 
 
 
@@ -380,22 +190,6 @@ public function show($id)
 
 
 
-    // ...
-
-    // public function generatePDF(Request $request)
-    // {
-    //     $classe_id = $request->classe_id;
-    //     if (!$classe_id) return back();
-
-    //     // On utilise la même logique que l'index
-    //     $data = $this->prepareBilanData($classe_id);
-
-    //     // On charge la vue spéciale PDF (qu'on va créer après)
-    //     $pdf = Pdf::loadView('pages.bilans.pdf', $data)
-    //         ->setPaper('a4', 'landscape'); // Important pour la largeur
-
-    //     return $pdf->download('Synthese_Annuelle_' . now()->format('Y') . '.pdf');
-    // }
 
     public function generatePDF($id)
 {
@@ -425,19 +219,6 @@ public function show($id)
     // 5. Télécharger ou afficher
     return $pdf->download('Releve_Notes_' . $etudiant->matricule . '.pdf');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function downloadRelevePdf($id)
@@ -479,7 +260,7 @@ public function show($id)
     // On utilise User car c'est ton modèle pour les étudiants
     $etudiants = User::with([
         'evaluations.module', 
-        'inscriptions.classe', 
+
         'inscriptions.specialite'
     ])->whereIn('id', $ids)->get();
 
@@ -494,5 +275,96 @@ public function show($id)
 
     return $pdf->download('releves_groupes.pdf');
 }
+
+
+
+
+public function generateSynthesePDF(Request $request)
+{
+    $specialite_id = $request->specialite_id;
+
+    if (!$specialite_id) {
+        return back()->with('error', 'Veuillez sélectionner une formation.');
+    }
+
+    // On utilise ta fonction qui travaille déjà sur la spécialité
+    $data = $this->prepareBilanData($specialite_id);
+    
+    // On harmonise le nom de la variable stat pour la vue
+    $data['stats']['moyenne_classe'] = $data['stats']['moyenne_formation'];
+
+    $pdf = Pdf::loadView('pages.bilans.synthese_pdf', $data)
+              ->setPaper('a4', 'landscape');
+
+    return $pdf->download('Synthese_' . $data['specialite']->nom_specialite . '.pdf');
+}
+
+
+
+public function generateSyntheseGlobalePDF()
+{
+    $anneeActive = AnneeAcademique::where('statut', true)->first();
+    $specialites = Specialite::all();
+    
+    $bilanGlobal = [];
+    $tousLesEtudiants = collect();
+
+    foreach ($specialites as $spec) {
+        $data = $this->prepareBilanData($spec->id);
+        
+        foreach ($data['etudiants'] as $etudiant) {
+            $moy = $etudiant->moyenne_generale;
+            // TA LOGIQUE DE MENTIONS
+            if ($moy >= 20) $m = 'Parfait';
+            elseif ($moy >= 18) $m = 'Excellent';
+            elseif ($moy >= 16) $m = 'Très Bien';
+            elseif ($moy >= 14) $m = 'Bien';
+            elseif ($moy >= 12) $m = 'Assez Bien';
+            elseif ($moy >= 10) $m = 'Passable';
+            else $m = 'Faible';
+            
+            $etudiant->mention_calculee = $m;
+        }
+
+        $majorSpec = $data['etudiants']->sortByDesc('moyenne_generale')->first();
+        
+        $bilanGlobal[] = [
+            'nom' => $spec->nom_specialite,
+            'effectif' => $data['stats']['total'],
+            'admis' => $data['stats']['admis'],
+            'echoues' => $data['stats']['echoues'],
+            'moyenne_formation' => $data['stats']['moyenne_formation'],
+            'taux' => $data['stats']['total'] > 0 ? ($data['stats']['admis'] / $data['stats']['total']) * 100 : 0,
+            'major' => $majorSpec,
+        ];
+        
+        $tousLesEtudiants = $tousLesEtudiants->concat($data['etudiants']);
+    }
+
+    // Calcul des compteurs globaux selon tes mentions
+    $statsGlobales = [
+        'total' => $tousLesEtudiants->count(),
+        'admis' => $tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 10)->count(),
+        'taux' => $tousLesEtudiants->count() > 0 ? ($tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 10)->count() / $tousLesEtudiants->count()) * 100 : 0,
+        'moyenne_promotion' => $tousLesEtudiants->avg('moyenne_generale'),
+        'major_absolu' => $tousLesEtudiants->sortByDesc('moyenne_generale')->first(),
+        // Compteurs précis
+        'count_excellent' => $tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 18)->count(),
+        'count_tres_bien' => $tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 16 && $e->moyenne_generale < 18)->count(),
+        'count_bien' => $tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 14 && $e->moyenne_generale < 16)->count(),
+        'count_assez_bien' => $tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 12 && $e->moyenne_generale < 14)->count(),
+        'count_passable' => $tousLesEtudiants->filter(fn($e) => $e->moyenne_generale >= 10 && $e->moyenne_generale < 12)->count(),
+    ];
+
+    $pdf = Pdf::loadView('pages.bilans.synthese_globale_pdf', [
+        'bilanGlobal' => $bilanGlobal,
+        'anneeActive' => $anneeActive,
+        'stats' => $statsGlobales,
+        'date' => date('d/m/Y')
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->download('Synthese_Globale.pdf');
+}
+
 
 }

@@ -62,8 +62,12 @@ Route::prefix('evaluations')->name('evaluations.')->group(function () {
     // Route pour enregistrer les notes en masse
     Route::post('/store', [EvaluationController::class, 'store'])->name('store');
 });
+
+
+Route::get('/bilan/synthese-globale', [BilanController::class, 'generateSyntheseGlobalePDF'])->name('bilan.synthese.globale');
+Route::get('/bilan/synthese-pdf', [BilanController::class, 'generateSynthesePDF'])->name('bilan.synthese.pdf');
 // Route pour générer le PDF
-Route::get('/bilan/pdf', [BilanController::class, 'generatePDF'])->name('bilan.pdf');
+Route::get('/bilan/pdf/{id}', [BilanController::class, 'generatePDF'])->name('bilan.pdf');
 
 
 Route::get('/bilan/print-batch', [BilanController::class, 'printBatch'])->name('bilan.print-batch');

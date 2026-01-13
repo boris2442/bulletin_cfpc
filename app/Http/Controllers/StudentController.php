@@ -64,7 +64,7 @@ public function indexList(Request $request)
         })
         ->with(['inscriptions' => function($q) use ($anneeActive) {
             // On ne charge que l'inscription de l'année en cours pour l'affichage
-            $q->where('annee_academique_id', $anneeActive->id)->with(['classe', 'specialite']);
+            $q->where('annee_academique_id', $anneeActive->id)->with([ 'specialite']);
         }]);
 
     // 3. Application des filtres (Seulement si l'utilisateur a rempli les champs)

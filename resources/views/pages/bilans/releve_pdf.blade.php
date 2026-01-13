@@ -64,7 +64,7 @@
         </tr>
     </table>
 
-    <table class="notes-table">
+  <table class="notes-table">
         <thead>
             <tr>
                 <th align="left">Unités d'Enseignement (Modules)</th>
@@ -74,35 +74,61 @@
             </tr>
         </thead>
         <tbody>
+            {{-- SEMESTRE 1 --}}
             @php $ptsS1 = 0; $coefS1 = 0; @endphp
             <tr class="bg-gray"><td colspan="4">SEMESTRE 1</td></tr>
             @foreach($etudiant->evaluations->where('semestre', 1)->where('module.is_bilan', false) as $eval)
                 @php 
-                    $p = $eval->note * ($eval->module->coef_module ?? 1);
-                    $ptsS1 += $p; $coefS1 += ($eval->module->coef_module ?? 1);
+                    $c = $eval->module->coef_module ?? 1;
+                    $p = $eval->note * $c;
+                    $ptsS1 += $p; $coefS1 += $c;
                 @endphp
                 <tr>
                     <td>{{ $eval->module->nom_module }}</td>
-                    <td class="text-center">{{ $eval->module->coef_module }}</td>
+                    <td class="text-center">{{ $c }}</td>
                     <td class="text-center bold">{{ number_format($eval->note, 2) }}</td>
                     <td class="text-center">{{ number_format($p, 2) }}</td>
                 </tr>
             @endforeach
+            {{-- Total intelligent S1 --}}
+            <tr style="background-color: #f0f0f0; font-weight: bold; font-style: italic;">
+                <td class="text-right">Total Semestre 1 :</td>
+                <td class="text-center">{{ $coefS1 }}</td>
+                <td></td>
+                <td class="text-center">{{ number_format($ptsS1, 2) }}</td>
+            </tr>
 
+            {{-- SEMESTRE 2 --}}
             @php $ptsS2 = 0; $coefS2 = 0; @endphp
             <tr class="bg-gray"><td colspan="4">SEMESTRE 2</td></tr>
             @foreach($etudiant->evaluations->where('semestre', 2)->where('module.is_bilan', false) as $eval)
                 @php 
-                    $p = $eval->note * ($eval->module->coef_module ?? 1);
-                    $ptsS2 += $p; $coefS2 += ($eval->module->coef_module ?? 1);
+                    $c = $eval->module->coef_module ?? 1;
+                    $p = $eval->note * $c;
+                    $ptsS2 += $p; $coefS2 += $c;
                 @endphp
                 <tr>
                     <td>{{ $eval->module->nom_module }}</td>
-                    <td class="text-center">{{ $eval->module->coef_module }}</td>
+                    <td class="text-center">{{ $c }}</td>
                     <td class="text-center bold">{{ number_format($eval->note, 2) }}</td>
                     <td class="text-center">{{ number_format($p, 2) }}</td>
                 </tr>
             @endforeach
+            {{-- Total intelligent S2 --}}
+            <tr style="background-color: #f0f0f0; font-weight: bold; font-style: italic;">
+                <td class="text-right">Total Semestre 2 :</td>
+                <td class="text-center">{{ $coefS2 }}</td>
+                <td></td>
+                <td class="text-center">{{ number_format($ptsS2, 2) }}</td>
+            </tr>
+
+            {{-- TOTAL GÉNÉRAL CONTRÔLE CONTINU --}}
+            <tr style="background-color: #e2e8f0; font-weight: bold; border-top: 2px solid #000;">
+                <td class="text-right uppercase">Total Général Contrôle Continu (CC) :</td>
+                <td class="text-center">{{ $coefS1 + $coefS2 }}</td>
+                <td class="text-center" style="font-size: 8px;">Moy: {{ ($coefS1+$coefS2) > 0 ? number_format(($ptsS1+$ptsS2)/($coefS1+$coefS2), 2) : '0' }}</td>
+                <td class="text-center">{{ number_format($ptsS1 + $ptsS2, 2) }}</td>
+            </tr>
         </tbody>
     </table>
 

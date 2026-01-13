@@ -9,11 +9,6 @@
 <section>
 <div class="ml-0 md:ml-64 min-h-screen dark:bg-[#1F2937] antialiased transition-colors duration-300 content p-4 mt-14" >
 
-<p class="text-red-500">
-   Debug : Total modules = {{ $modulesNormaux->count() }} | 
-   S1 = {{ $modulesNormaux->where('semestre', 1)->count() }} | 
-   S2 = {{ $modulesNormaux->where('semestre', 2)->count() }}
-</p>
 
 {{-- BARRE D'ACTIONS FLOTTANTE (STAY TOP ON SCROLL) --}}
     <div class="sticky top-16 z-30 flex flex-col md:flex-row justify-between items-start md:items-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6 gap-4 no-print">
@@ -29,11 +24,30 @@
 
         <div class="flex items-center gap-2 w-full md:w-auto">
             {{-- Bouton Imprimer (Minimaliste) --}}
-            <a href="{{ route('bilan.pdf', ['classe_id' => request('classe_id')]) }}" 
-               class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 text-xs font-bold transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                BILAN COMPLET
-            </a>
+     {{-- Ligne 32 : Correction du bouton --}}
+@if(request('specialite_id'))
+<a href="{{ route('bilan.synthese.pdf', ['specialite_id' => request('specialite_id')]) }}"
+           target="_blank"
+           class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-green-500 text-green-700 dark:text-green-400 rounded-lg hover:bg-green-50 text-xs font-bold transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            IMPRIMER CETTE SPÉCIALITÉ
+        </a>
+
+
+
+
+{{-- CAS 2 : Aucune spécialité sélectionnée (Vue d'ensemble) --}}
+    @else
+        <a href="{{ route('bilan.synthese.globale') }}"
+           target="_blank"
+           class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xs font-bold transition shadow-lg animate-pulse">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            SYNTHÈSE GLOBALE DU CENTRE
+        </a>
+    @endif
+
+
+
 
             {{-- Bouton Actions Groupées (Style Facebook/Modern) --}}
             <div class="relative group">
@@ -289,7 +303,7 @@
             <svg class="w-20 h-20 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <p class="text-xl font-bold uppercase text-gray-400">Veuillez sélectionner une classe pour générer la synthèse</p>
+            <p class="text-xl font-bold uppercase text-gray-400">Veuillez sélectionner une spécialité pour générer la synthèse</p>
         </div>
     @endif
 
