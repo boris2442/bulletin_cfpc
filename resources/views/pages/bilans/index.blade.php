@@ -366,15 +366,38 @@
     }
 </script>
 {{-- À placer juste avant le @endsection --}}
-<form id="sync-bilan-form" action="{{ route('bilan.sync', request('specialite_id')) }}" method="POST" style="display: none;">
+<form id="sync-bilan-form"  method="POST" style="display: none;">
     @csrf
 </form>
 
 <script>
+// function syncBilanTable() {
+//     if (confirm("Voulez-vous calculer et enregistrer définitivement les moyennes dans la table Bilan ? Cela mettra à jour les statistiques officielles.")) {
+//         document.getElementById('sync-bilan-form').submit();
+//     }
+// }
+
 function syncBilanTable() {
-    if (confirm("Voulez-vous calculer et enregistrer définitivement les moyennes dans la table Bilan ? Cela mettra à jour les statistiques officielles.")) {
-        document.getElementById('sync-bilan-form').submit();
+    // On récupère l'ID de la spécialité depuis l'URL actuelle ou le sélecteur
+    const urlParams = new URLSearchParams(window.location.search);
+    const specId = urlParams.get('specialite_id');
+
+    if (!specId) {
+        alert("⚠️ Veuillez d'abord sélectionner une spécialité dans la liste.");
+        return;
+    }
+
+    if (confirm("Voulez-vous calculer et enregistrer définitivement les moyennes dans la table Bilan pour cette spécialité ?")) {
+        const form = document.getElementById('sync-bilan-form');
+        
+        // On construit l'URL dynamiquement avec l'ID trouvé
+        form.action = `/bilan/sync/${specId}`;
+        form.submit();
     }
 }
+
+
+
+
 </script>
 @endsection

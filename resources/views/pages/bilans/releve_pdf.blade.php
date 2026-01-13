@@ -124,7 +124,7 @@
 
             {{-- TOTAL GÉNÉRAL CONTRÔLE CONTINU --}}
             <tr style="background-color: #e2e8f0; font-weight: bold; border-top: 2px solid #000;">
-                <td class="text-right uppercase">Total Général Contrôle Continu (CC) :</td>
+                <td class="text-right uppercase">Total Général </td>
                 <td class="text-center">{{ $coefS1 + $coefS2 }}</td>
                 <td class="text-center" style="font-size: 8px;">Moy: {{ ($coefS1+$coefS2) > 0 ? number_format(($ptsS1+$ptsS2)/($coefS1+$coefS2), 2) : '0' }}</td>
                 <td class="text-center">{{ number_format($ptsS1 + $ptsS2, 2) }}</td>

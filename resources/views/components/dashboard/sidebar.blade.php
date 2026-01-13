@@ -18,8 +18,12 @@
             <i class="fas fa-home mr-3"></i> 
             <span>Accueil</span>
         </a>
+        {{-- {{ Auth::user()->role==='Administrateur' }} --}}
+{{-- {{  Auth::user()->role==='Administrateur'; }} --}}
 
-        <!-- Dashboard -->
+@auth
+@if ( Auth::user()->role==='Administrateur')
+    <!-- Dashboard -->
         <a href=" {{ route('tableau-de-bord') }}" 
   title="Tableau de bord"
         aria-label="  Voir le tableau de bord"     
@@ -28,6 +32,9 @@
             <i class="fas fa-chart-line mr-3"></i> 
             <span>Tableau de bord</span>
         </a>
+
+
+
 
         <!-- Années Académiques -->
      <a href="{{ route('annee-academiques.index') }}"
@@ -74,44 +81,7 @@
 </a>
 
 
-        <!-- Inscriptions -->
-        <a href="{{ route('inscriptions.index') }}"
-            title=" Inscriptions  "
-        aria-label=" Gérer les Inscriptions"
-            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
-          {{ request()->routeIs('inscriptions.*')
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
-            <i class="fas fa-user-graduate mr-3"></i> 
-            <span>Inscriptions</span>
-        </a>
-
-        <!-- Eva -->
-        <a href="{{ route('evaluations.index') }}"
-            title=" Evaluations  "
-        aria-label=" Gérer les Evaluations"
-            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
-                 {{ request()->routeIs('evaluations.*')
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
-            <i class="fas fa-file-alt mr-3"></i> 
-            <span>Evaluations</span>
-        </a>
-
-        <!-- Bilan general -->
-        <a 
-        href="{{ route('bilan.index') }}"
-               title=" Bilan general  "
-            aria-label="Gestion des bilans generaux"
-          class="
-          flex items-center py-2.5 px-4 rounded-lg transition duration-200
-          {{ request()->routeIs('bilan.index')
-            ? 'bg-blue-600 text-white'
-            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
-            <i class="fas fa-chart-bar mr-3"></i> 
-            <span>Bilan general</span>
-        </a>
-        <!-- Affectation -->
+  <!-- Affectation -->
         <a 
         href="{{ route('affectations.index') }}"
             title=" Affectations  "
@@ -124,19 +94,11 @@
             <i class="fas fa-chart-bar mr-3"></i> 
             <span>Affectation</span>
         </a>
-      
-
-<a href="{{ route('students.indexList') }}" 
-   class="flex items-center gap-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('students.*') ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
-        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-    </svg>
-    <span class="font-medium">Étudiants</span>
-</a>
 
 
-        <!--Utilisateurs-->
+
+
+     <!--Utilisateurs-->
         <a 
         href="{{ route('users.index') }}"
         title=" Utilisateurs  "
@@ -150,6 +112,87 @@
             <span>Utilisateurs</span>
         </a>
 
+ <!-- Bilan general -->
+        <a 
+        href="{{ route('bilan.index') }}"
+               title=" Bilan general  "
+            aria-label="Gestion des bilans generaux"
+          class="
+          flex items-center py-2.5 px-4 rounded-lg transition duration-200
+          {{ request()->routeIs('bilan.index')
+            ? 'bg-blue-600 text-white'
+            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-chart-bar mr-3"></i> 
+            <span>Bilan general</span>
+        </a>
+      
+
+
+
+
+@endif
+    
+@endauth
+
+        
+
+      
+@auth
+@if ( Auth::user()->role==='Administrateur' || Auth::user()->role==='secretaire')
+
+
+        <!-- Inscriptions -->
+        <a href="{{ route('inscriptions.index') }}"
+            title=" Inscriptions  "
+        aria-label=" Gérer les Inscriptions"
+            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+          {{ request()->routeIs('inscriptions.*')
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-user-graduate mr-3"></i> 
+            <span>Inscriptions</span>
+        </a>
+
+
+        <a href="{{ route('students.indexList') }}" 
+   class="flex items-center gap-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('students.*') ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+    </svg>
+    <span class="font-medium">Étudiants</span>
+</a>
+
+
+
+@endif
+    
+@endauth
+
+        
+
+@auth
+    @if (Auth::user()->role==='Enseignant' || Auth::user()->role==='Administrateur') 
+        
+ 
+
+        <!-- Eva -->
+        <a href="{{ route('evaluations.index') }} "
+            title=" Evaluations  "
+        aria-label=" Gérer les Evaluations"
+            class="flex items-center py-2.5 px-4 rounded-lg transition duration-200
+                 {{ request()->routeIs('evaluations.*')
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-neutral-800' }}">
+            <i class="fas fa-file-alt mr-3"></i> 
+            <span>Evaluations</span>
+        </a>
+
+          @endif
+@endauth
+
+
+   
         <!-- Séparateur -->
         <div class="border-t border-gray-200 dark:border-neutral-700 my-4"></div>
 

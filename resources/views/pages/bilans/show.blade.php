@@ -132,7 +132,7 @@
 
     {{-- TOTAL GÉNÉRAL DES MODULES --}}
     <tr class="bg-blue-50 font-black border-t-2 border-black text-[12px]">
-        <td class="border border-black p-2 text-right uppercase">TOTAL GÉNÉRAL (CC):</td>
+        <td class="border border-black p-2 text-right uppercase">TOTAL GÉNÉRAL </td>
         <td class="border border-black p-2 text-center">{{ $coefS1 + $coefS2 }}</td>
         <td class="border border-black p-2 text-center">Moy: {{ ($coefS1+$coefS2) > 0 ? number_format(($ptsS1+$ptsS2)/($coefS1+$coefS2), 2) : '0.00' }}</td>
         <td class="border border-black p-2 text-center">{{ number_format($ptsS1 + $ptsS2, 2) }}</td>
