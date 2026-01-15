@@ -68,6 +68,11 @@ Route::prefix('evaluations')->name('evaluations.')->group(function () {
 // Groupe avec préfixe d'URL 'bilan' et préfixe de nom 'bilan.'
 Route::prefix('bilan')->name('bilan.')->group(function () {
 
+
+    // Route pour la synthèse de toutes les spécialités (Le Grand Livre)
+    Route::get('/synthese-globale-pdf', [BilanController::class, 'generateSyntheseToutesSpecialitesPDF'])
+        ->name('synthese.globale.pdf');
+
     // Routes de synthèses et impressions
     Route::get('/synthese-globale', [BilanController::class, 'generateSyntheseGlobalePDF'])->name('synthese.globale');
     Route::get('/synthese-pdf', [BilanController::class, 'generateSynthesePDF'])->name('synthese.pdf');

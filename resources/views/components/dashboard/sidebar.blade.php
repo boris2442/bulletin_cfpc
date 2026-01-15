@@ -173,8 +173,8 @@
 
         
 
-@auth
-    @if (Auth::user()->role==='Enseignant' || Auth::user()->role==='Administrateur' || Auth::user()->role==='secretaire')  
+{{-- @auth --}}
+    {{-- @if (Auth::user()->role==='Enseignant' || Auth::user()->role==='Administrateur' || Auth::user()->role==='secretaire')   --}}
         
  
 
@@ -190,8 +190,8 @@
             <span>Evaluations</span>
         </a>
 
-          @endif
-@endauth
+          {{-- @endif --}}
+{{-- @endauth --}}
 
 
    

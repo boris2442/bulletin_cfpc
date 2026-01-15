@@ -15,9 +15,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if (Auth::user()->role!='Etudiant')
+                        
+                 
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                         {{ __('Tableau de board') }}
                     </x-nav-link>
+                       @endif
                 </div>
             </div>
 
@@ -44,7 +48,7 @@
 @if(auth()->user()->role == 'Etudiant')
 
 
-    <x-dropdown-link :href="route('releve.pdf', Auth::id())" class="font-bold text-green-600 dark:text-green-400">
+    <x-dropdown-link :href="route('bilan.releve.pdf', Auth::id())" class="font-bold text-green-600 dark:text-green-400">
         <div class="flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -93,11 +97,13 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+             @if (Auth::user()->role!='Etudiant')
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                 {{ __('Tableau de bord personnalisé') }}
             </x-responsive-nav-link>
         </div>
+        @endif
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

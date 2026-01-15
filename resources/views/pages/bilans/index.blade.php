@@ -21,12 +21,19 @@
             </h1>
             <p class="text-xs text-gray-500 font-medium px-10 italic">{{ $anneeActive->date_debut->format('Y') }} - {{ $anneeActive->date_fin->format('Y') }}</p>
         </div>
-
-        <div class="flex items-center gap-2 w-full md:w-auto">
+   <div class="flex items-center gap-2 w-full md:w-auto">
             {{-- Bouton Imprimer (Minimaliste) --}}
      {{-- Ligne 32 : Correction du bouton --}}
-@if(request('specialite_id'))
-<a href="{{ route('bilan.synthese.pdf', ['specialite_id' => request('specialite_id')]) }}"
+    @if(request('specialite_id'))
+    {{-- BOUTON RETOUR : Visible uniquement si une spécialité est choisie --}}
+    <a href="{{ route('bilan.index') }}" 
+       class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 text-xs font-bold transition border border-gray-300 dark:border-gray-600 shadow-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        RETOUR
+    </a>
+    <a href="{{ route('bilan.synthese.pdf', ['specialite_id' => request('specialite_id')]) }}"
            target="_blank"
            class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-green-500 text-green-700 dark:text-green-400 rounded-lg hover:bg-green-50 text-xs font-bold transition shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
@@ -36,7 +43,7 @@
 
 
 
-{{-- CAS 2 : Aucune spécialité sélectionnée (Vue d'ensemble) --}}
+    {{-- CAS 2 : Aucune spécialité sélectionnée (Vue d'ensemble) --}}
     @else
         <a href="{{ route('bilan.synthese.globale') }}"
            target="_blank"
@@ -44,6 +51,14 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             SYNTHÈSE GLOBALE DU CENTRE
         </a>
+        <a href="{{ route('bilan.synthese.globale.pdf') }}"
+       target="_blank"
+       class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xs font-bold transition shadow-lg animate-pulse">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        IMPRIMER TOUT LE CENTRE (PDF)
+    </a>
     @endif
 
 
@@ -82,34 +97,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-    {{-- Filtre par Classe --}}
-    {{-- <div class="bg-white dark:bg-neutral-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 mb-8 no-print">
-        <form action="{{ route('bilan.index') }}" method="GET" class="flex items-end gap-4">
-            <div class="flex-1">
-                <label class="block mb-2 text-xs font-bold uppercase text-gray-500">Choisir une Classe / Niveau</label>
-                <select name="classe_id" class="w-full rounded-lg border-gray-300 dark:bg-neutral-700 dark:text-white focus:ring-green-500" onchange="this.form.submit()">
-                    <option value="">Sélectionnez une classe...</option>
-                    @foreach($classes as $c)
-                        <option value="{{ $c->id }}" {{ request('classe_id') == $c->id ? 'selected' : '' }}>
-                            {{ $c->nom_classe }} ({{ $c->specialite->nom_specialite }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </form>
-    </div> --}}
-
-
-
 {{-- Filtre par Spécialité --}}
 <div class="bg-white dark:bg-neutral-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 mb-8 no-print">
     <form action="{{ route('bilan.index') }}" method="GET" class="flex items-end gap-4">
@@ -137,7 +124,7 @@
    @if(request('specialite_id'))
         @if(count($etudiants) > 0)
             @if($moduleBilan)
-                <form action="{{ route('bilans.store') }}" method="POST">
+                <form action="{{ route('bilan.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="module_id" value="{{ $moduleBilan->id }}">
 
@@ -178,7 +165,8 @@
             <th class="border border-green-800 p-1 text-center w-12 text-[9px]" title="{{ $mod->nom_module }}">
                 {{ $mod->code_module ?? 'M'.$mod->id }}
                 {{-- afficher le nom du module --}}
-                <i class="text-[8px]">{{ $mod->nom_module }}</i>
+                {{-- <i class="text-[8px]">{{ $mod->nom_module }}</i> --}} <br/>
+                <i> coef:{{ $mod->coef_module }}</i>
             </th>
         @endforeach
         <th class="border border-green-800 p-1 text-center bg-[#b6d7a8] font-bold italic">MOY S1</th>
@@ -187,7 +175,9 @@
         @foreach($modsS2 as $mod)
             <th class="border border-green-800 p-1 text-center w-12 text-[9px]" title="{{ $mod->nom_module }}">
                 {{ $mod->code_module ?? 'M'.$mod->id }}
-                  <i class="text-[8px]">{{ $mod->nom_module }}</i>
+     
+                  <br/>
+                <i> coef:{{ $mod->coef_module }}</i>
             </th>
         @endforeach
         <th class="border border-green-800 p-1 text-center bg-[#b6d7a8] font-bold italic">MOY S2</th>

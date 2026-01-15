@@ -8,189 +8,86 @@ use App\Models\Evaluation;
 use App\Models\Specialite;
 use Illuminate\Http\Request;
 use App\Models\AnneeAcademique;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class EvaluationController extends Controller
 {
-
-
-
-
     public function index(Request $request)
-
     {
-
-        $user = auth()->user();
-
         $anneeActive = AnneeAcademique::where('statut', true)->first();
-
-
-
-        // 1. Filtrage des Spécialités
-
-        // 1. Filtrage des Spécialités
-      // 1. Filtrage des Spécialités
-if ($user->role === 'Enseignant') {
-    // On récupère les IDs des modules du prof
-    $myModuleIds = $user->modulesEnseignes->pluck('id')->toArray();
-
-    // On cherche les spécialités qui possèdent ces modules
-    $specialites = Specialite::whereHas('modules', function ($q) use ($myModuleIds) {
-        // CORRECTION : Précisez 'modules.id' pour lever l'ambiguïté
-        $q->whereIn('modules.id', $myModuleIds); 
-    })->get();
-} else {
-    $specialites = Specialite::all();
-}
-
-
-        // Récupération des filtres
+        $specialites = Specialite::all();
 
         $specialite_id = $request->specialite_id;
-
         $module_id = $request->module_id;
-
         $semestre = $request->semestre;
 
-
-
         $modules = [];
-
         $etudiants = [];
 
+        // ÉTAPE 1 : Si la spécialité ET le semestre sont choisis
+        // On charge les modules filtrés par ces deux critères
+        if ($specialite_id && $semestre) {
+            $spe = Specialite::find($specialite_id);
 
+            if ($spe) {
+                $formatSemestre = (str_contains($semestre, 'S')) ? $semestre : 'S' . $semestre;
 
-        // 2. Chargement des modules filtrés par spécialité ET par attribution (si prof)
+                // On récupère uniquement les modules de CE semestre dans CETTE spécialité
+                $modules = $spe->modules()
+                    ->wherePivot('semestre', $formatSemestre)
+                    ->get();
+            }
+        }
 
-        // if ($specialite_id) {
-
-        //     $query = Module::where('specialite_id', $specialite_id);
-
-
-
-        //     if ($user->role === 'Enseignant') {
-
-        //         // On ne montre que SES modules au sein de cette spécialité
-
-        //         $query->whereIn('id', $user->modulesEnseignes->pluck('id'));
-        //     }
-
-
-
-        //     $modules = $query->get();
-        // }
-
-
-
-
-
-// ... (début de ta fonction index)
-
-$modules = [];
-$etudiants = [];
-
-if ($specialite_id) {
-    // 1. On récupère la spécialité
-    $spe = Specialite::find($specialite_id);
-    
-    // 2. On prépare la récupération des modules liés
-    $query = $spe->modules(); 
-
-    // 3. ON FILTRE PAR SEMESTRE ICI
-    if ($semestre) {
-        // On transforme le chiffre (1 ou 2) en format S1 ou S2 si nécessaire
-        $formatSemestre = 'S' . $semestre; 
-        
-        // On dit à Laravel de regarder la colonne 'semestre' dans la table pivot
-        $query->wherePivot('semestre', $formatSemestre);
-    }
-
-    // 4. Si c'est un prof, on filtre encore pour ne montrer que SES matières
-    if ($user->role === 'Enseignant') {
-        $query->whereIn('modules.id', $user->modulesEnseignes->pluck('id'));
-    }
-
-    $modules = $query->get();
-}
-
-// ... (reste du code pour les étudiants)
-
-
-
-
-
-
-
-
-
-
-
-
-        // 3. Récupération des étudiants (Ta logique originale sécurisée)
-
+        // ÉTAPE 2 : On ne récupère les étudiants QUE si les 3 filtres sont là
+        // ÉTAPE 2 : On ne récupère les étudiants QUE si les 3 filtres sont là
         if ($specialite_id && $module_id && $semestre) {
 
-
-
-            // Sécurité supplémentaire : Empêcher un prof de forcer l'ID d'un module d'un autre via l'URL
-
-            if ($user->role === 'Enseignant' && !$user->modulesEnseignes->contains($module_id)) {
-
-                abort(403, "Vous n'enseignez pas ce module.");
-            }
-
-
+            // TRÈS IMPORTANT : On extrait le chiffre (1 ou 2) pour correspondre à la base
+            $semestreChiffre = filter_var($semestre, FILTER_SANITIZE_NUMBER_INT);
 
             $etudiants = User::whereHas('inscriptions', function ($q) use ($specialite_id, $anneeActive) {
-
                 $q->where('specialite_id', $specialite_id)
-
                     ->where('annee_academique_id', $anneeActive->id);
-            })->with(['evaluations' => function ($q) use ($module_id, $semestre, $anneeActive) {
-
+            })->with(['evaluations' => function ($q) use ($module_id, $semestreChiffre, $anneeActive) {
                 $q->where('module_id', $module_id)
-
-                    ->where('semestre', $semestre)
-
+                    ->where('semestre', $semestreChiffre) // On cherche le chiffre (ex: 1)
                     ->where('annee_academique_id', $anneeActive->id);
             }])->get();
         }
-        // AJOUTEZ CECI POUR TESTER
-
-
-
         return view('pages.evaluations.index', compact('specialites', 'modules', 'etudiants', 'anneeActive'));
     }
-
-
     public function store(Request $request)
     {
-        $user = auth()->user();
-
-        // SÉCURITÉ : Empêcher un prof de tricher à l'enregistrement
-        if ($user->role === 'Enseignant' && !$user->modulesEnseignes->contains($request->module_id)) {
-            return redirect()->back()->with('error', "Action non autorisée : ce module ne vous est pas attribué.");
-        }
-
         $request->validate([
             'notes' => 'required|array',
             'notes.*' => 'nullable|numeric|min:0|max:20',
+            'module_id' => 'required',
+            'semestre' => 'required',
+            'annee_academique_id' => 'required'
         ]);
 
-        foreach ($request->notes as $etudiant_id => $note) {
-            if ($note !== null) {
-                Evaluation::updateOrCreate(
-                    [
-                        'user_id' => $etudiant_id,
-                        'module_id' => $request->module_id,
-                        'annee_academique_id' => $request->annee_academique_id,
-                        'semestre' => $request->semestre,
-                    ],
-                    ['note' => $note]
-                );
-            }
-        }
+        // On utilise DB::transaction pour s'assurer que soit tout est enregistré, soit rien (sécurité admin)
+        DB::transaction(function () use ($request) {
+            foreach ($request->notes as $etudiant_id => $note) {
+                if ($note !== null) {
+                    // On extrait le chiffre : "S1" devient 1
+                    $semestreInt = filter_var($request->semestre, FILTER_SANITIZE_NUMBER_INT);
 
-        return redirect()->back()->with('success', 'Notes enregistrées avec succès.');
+                    \DB::table('evaluations')->updateOrInsert(
+                        [
+                            'user_id' => $etudiant_id,
+                            'module_id' => $request->module_id,
+                            'annee_academique_id' => $request->annee_academique_id,
+                            'semestre' => $semestreInt, // Envoie 1 au lieu de "S1"
+                        ],
+                        ['note' => $note, 'updated_at' => now()]
+                    );
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', 'Notes enregistrées avec succès par l\'administration.');
     }
 }

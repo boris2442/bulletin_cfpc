@@ -105,12 +105,12 @@ class User extends Authenticatable
     }
 
 
-  // Remplace 'classeActuelle' par 'specialiteActuelle'
-public function specialiteActuelle()
-{
-    // On récupère la dernière inscription pour savoir dans quelle spécialité il est cette année
-    return $this->hasOne(Inscription::class)->latestOfMany();
-}
+    // Remplace 'classeActuelle' par 'specialiteActuelle'
+    public function specialiteActuelle()
+    {
+        // On récupère la dernière inscription pour savoir dans quelle spécialité il est cette année
+        return $this->hasOne(Inscription::class)->latestOfMany();
+    }
 
 
     /**
@@ -123,7 +123,7 @@ public function specialiteActuelle()
     /**
      * Calcule la moyenne d'un étudiant pour un semestre et une année donnée
      */
-   
+
 
 
 
@@ -149,35 +149,70 @@ public function specialiteActuelle()
         return ($moyenneModules * 0.3) + ($noteBilan * 0.7);
     }
 
-    
 
 
 
 
 
 
-    public function moyenneSemestre($semestreLabel, $annee_id)
-{
-    // On récupère les évaluations de l'étudiant pour l'année donnée
-    $evals = $this->evaluations()
-        ->where('annee_academique_id', $annee_id)
-        ->whereHas('module', function ($q) use ($semestreLabel) {
-            $q->where('is_bilan', false)
-              ->where('semestre', $semestreLabel); // On filtre sur le semestre défini dans le MODULE
-        })->get();
 
-    $somme = 0;
-    $totalCoef = 0;
+    //     public function moyenneSemestre($semestreLabel, $annee_id)
+    // {
+    //     // On récupère les évaluations de l'étudiant pour l'année donnée
+    //     $evals = $this->evaluations()
+    //         ->where('annee_academique_id', $annee_id)
+    //         ->whereHas('module', function ($q) use ($semestreLabel) {
+    //             $q->where('is_bilan', false)
+    //               ->where('semestre', $semestreLabel); // On filtre sur le semestre défini dans le MODULE
+    //         })->get();
 
-    foreach ($evals as $ev) {
-        // Sécurité : on vérifie que le module existe
-        if ($ev->module) {
-            $coef = $ev->module->coef_module ?? 1;
-            $somme += ($ev->note * $coef);
-            $totalCoef += $coef;
+    //     $somme = 0;
+    //     $totalCoef = 0;
+
+    //     foreach ($evals as $ev) {
+    //         // Sécurité : on vérifie que le module existe
+    //         if ($ev->module) {
+    //             $coef = $ev->module->coef_module ?? 1;
+    //             $somme += ($ev->note * $coef);
+    //             $totalCoef += $coef;
+    //         }
+    //     }
+
+    //     return $totalCoef > 0 ? $somme / $totalCoef : 0;
+    // }
+
+
+    public function moyenneSemestre($semestreInput, $annee_id)
+    {
+        // ÉTAPE 1 : Normalisation du semestre
+        // Si on reçoit 1 ou 2, on transforme en 'S1' ou 'S2'
+        // Si on reçoit déjà 'S1', on le garde.
+        $semestreLabel = (is_numeric($semestreInput)) ? 'S' . $semestreInput : $semestreInput;
+
+        // ÉTAPE 2 : Récupération des évaluations
+        $evals = $this->evaluations()
+            ->where('annee_academique_id', $annee_id)
+            ->whereHas('module', function ($q) use ($semestreLabel) {
+                $q->where('is_bilan', false);
+
+                // On cherche dans la table pivot module_specialite car c'est là 
+                // que le semestre est défini pour une formation précise
+                $q->whereHas('specialites', function ($sq) use ($semestreLabel) {
+                    $sq->where('module_specialite.semestre', $semestreLabel);
+                });
+            })->get();
+
+        $somme = 0;
+        $totalCoef = 0;
+
+        foreach ($evals as $ev) {
+            if ($ev->module) {
+                $coef = $ev->module->coef_module ?? 1;
+                $somme += ($ev->note * $coef);
+                $totalCoef += $coef;
+            }
         }
-    }
 
-    return $totalCoef > 0 ? $somme / $totalCoef : 0;
-}
+        return $totalCoef > 0 ? $somme / $totalCoef : 0;
+    }
 }

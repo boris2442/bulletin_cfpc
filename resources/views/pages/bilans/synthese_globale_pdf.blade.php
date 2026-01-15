@@ -49,7 +49,8 @@
         </td>
         <td width="35%" align="center" class="text-upper">
             REPUBLIC OF CAMEROON<br>Peace - Work - Fatherland<br>-------<br>
-            CENTRE DE FORMATION LA CANADIENNE
+  MINISTRY OF EMPLOYMENT AND
+VOCATIONAL TRAINING
         </td>
     </tr>
 </table>
@@ -170,7 +171,7 @@
     <tr>
         <td width="50%" align="center">
             <div style="border-bottom: 1px solid #000; width: 150px; margin: 0 auto 5px auto;"></div>
-            <p style="text-transform: uppercase; font-weight: bold; font-size: 9px;">Le Surveillant Général</p>
+            <p style="text-transform: uppercase; font-weight: bold; font-size: 9px;">Le Coordonateur</p>
         </td>
         <td width="50%" align="center">
             <p style="font-size: 10px; margin-bottom: 40px;">Fait à Bafoussam, le <strong>{{ $date }}</strong></p>

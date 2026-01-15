@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class BilanCompetence extends Model
 {
+    // AJOUTEZ CECI : Indique que la table n'a pas d'ID auto-incrémenté standard
+// AJOUTEZ CES DEUX LIGNES
+    protected $primaryKey = null; // Indique qu'il n'y a pas de clé primaire unique
+    public $incrementing = false; // Désactive l'auto-incrémentation
  protected $table = 'bilan_competences'; // On précise le nom exact
 
     protected $fillable = [

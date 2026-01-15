@@ -2,32 +2,58 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <style>
-        body { font-family: 'DejaVu Sans', sans-serif; font-size: 9px; margin: 0; padding: 0; }
-        
-        /* En-tête officiel */
-        .header-table { width: 100%; border: none; margin-bottom: 10px; }
-        .header-table td { border: none; padding: 0; vertical-align: top; }
-        .text-upper { text-transform: uppercase; font-weight: bold; font-size: 8px; line-height: 1.2; }
-        .title-box { text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 15px; }
-        
-        /* Infos de la classe */
-        .info-section { margin-bottom: 15px; font-size: 10px; }
-        .info-grid { width: 100%; border: none; }
-        .info-grid td { border: none; text-align: left; padding: 2px 0; }
+   <style>
+    body { font-family: 'DejaVu Sans', sans-serif; font-size: 9px; margin: 0; padding: 0; }
+    
+    /* En-tête officiel */
+    .header-table { width: 100%; border: none; margin-bottom: 10px; }
+    .header-table td { border: none; padding: 0; vertical-align: top; }
+    .text-upper { text-transform: uppercase; font-weight: bold; font-size: 8px; line-height: 1.2; }
+    .title-box { text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 15px; }
+    
+    /* Infos de la classe */
+    .info-section { margin-bottom: 15px; font-size: 10px; }
+    .info-grid { width: 100%; border: none; }
+    .info-grid td { border: none; text-align: left; padding: 2px 0; }
 
-        /* Tableau des notes */
-        table.results { width: 100%; border-collapse: collapse; }
-        table.results th, table.results td { border: 1px solid #000; padding: 3px; text-align: center; }
-        .bg-green { background-color: #d9ead3; }
-        .bg-grey { background-color: #f3f4f6; }
-        .text-left { text-align: left; padding-left: 5px; font-size: 8px; }
-        
-        /* Rotation pour les noms de modules longs si nécessaire */
-        .vertical-text { font-size: 7px; height: 60px; }
-        .module-code { font-weight: bold; display: block; }
-        .module-name { font-size: 6px; font-style: italic; font-weight: normal; text-transform: lowercase; }
-    </style>
+    /* Tableau des notes */
+    table.results { width: 100%; border-collapse: collapse; }
+    table.results th, table.results td { border: 1px solid #000; padding: 3px; text-align: center; }
+    
+    /* Couleurs du Design Pattern */
+    .bg-green { background-color: #d9ead3 !important; }
+    .bg-grey { background-color: #e2efda !important; font-weight: bold; }
+    .text-left { text-align: left; padding-left: 5px; font-size: 8px; }
+
+    /* REGLAGE DE LA ROTATION (CORRIGÉ) */
+    .vertical-text {
+        vertical-align: bottom;
+        text-align: center;
+        padding: 5px 2px !important;
+        height: 80px; 
+    }
+
+    .module-code {
+        writing-mode: vertical-rl;
+        /* On retire le 180deg pour ne plus être à l'envers */
+        transform: rotate(0deg); 
+        white-space: nowrap;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 8px;
+    }
+
+    /* Style des cellules de notes */
+    table.results td {
+        height: 25px;
+        border: 1px solid #999;
+    }
+
+    .moy-rouge {
+        color: #ff0000 !important;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
 
@@ -87,73 +113,80 @@
         </tr>
     </table>
 </div>
+<table class="results">
+    <thead>
+        <tr class="bg-green">
+            <th rowspan="2" width="20">N°</th>
+            <th rowspan="2" width="180">Noms et prénoms/names and first names</th>
+            
+            {{-- Correction Colspan S1 --}}
+            @php $countS1 = $modulesNormaux->filter(fn($m) => $m->pivot->semestre == 1 || $m->pivot->semestre == 'S1')->count(); @endphp
+            <th colspan="{{ $countS1 }}"> Semestre 1 </th>
+            <th rowspan="2" class="bg-grey" width="35">MOY/20 EVAL1</th>
 
-    {{-- Tableau des Résultats --}}
-    <table class="results">
-        <thead>
-            <tr class="bg-green">
-                <th rowspan="2" width="20">N°</th>
-                <th rowspan="2">Noms et Prénoms</th>
-                <th colspan="{{ $modulesNormaux->where('semestre', 1)->count() + 1 }}">SEMESTRE 1</th>
-                <th colspan="{{ $modulesNormaux->where('semestre', 2)->count() + 1 }}">SEMESTRE 2</th>
-                <th rowspan="2" width="40">BILAN<br>(70%)</th>
-                <th rowspan="2" width="40">MOY.<br>GEN.</th>
-            </tr>
-            <tr class="bg-green">
-                @foreach($modulesNormaux->where('semestre', 1) as $mod)
-                    <th class="vertical-text">
-                        <span class="module-code">{{ $mod->code_module }}</span>
-                        <span class="module-name">{{ Str::limit($mod->nom_module, 15) }}</span>
-                    </th>
-                @endforeach
-                <th>MOY S1</th>
-                @foreach($modulesNormaux->where('semestre', 2) as $mod)
-                    <th class="vertical-text">
-                        <span class="module-code">{{ $mod->code_module }}</span>
-                        <span class="module-name">{{ Str::limit($mod->nom_module, 15) }}</span>
-                    </th>
-                @endforeach
-                <th>MOY S2</th>
+            {{-- Correction Colspan S2 --}}
+            @php $countS2 = $modulesNormaux->filter(fn($m) => $m->pivot->semestre == 2 || $m->pivot->semestre == 'S2')->count(); @endphp
+            <th colspan="{{ $countS2 }}">Semestre 2</th>
+            <th rowspan="2" class="bg-grey" width="35">MOY/20 EVAL2</th>
 
+            <th rowspan="2" width="60">MOY/20 Bilan des compétences (70%) skills assesment</th>
+            <th rowspan="2" width="50" style="background-color: #fce5cd; color: #b91c1c;">MOY.GEN. (100%)</th>
+        </tr>
 
-
-
-
-
-                
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($etudiants as $index => $etudiant)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td class="text-left" style="font-weight: bold;">{{ $etudiant->name }}</td>
-                    
-                    {{-- S1 --}}
-                    @foreach($modulesNormaux->where('semestre', 1) as $mod)
-                        <td>{{ $etudiant->evaluations->where('module_id', $mod->id)->where('semestre', 1)->first()?->note ?? '-' }}</td>
-                    @endforeach
-                    <td class="bg-grey">{{ number_format($etudiant->moyenne_s1, 2) }}</td>
-
-                    {{-- S2 --}}
-                    @foreach($modulesNormaux->where('semestre', 2) as $mod)
-                        <td>{{ $etudiant->evaluations->where('module_id', $mod->id)->where('semestre', 2)->first()?->note ?? '-' }}</td>
-                    @endforeach
-                    <td class="bg-grey">{{ number_format($etudiant->moyenne_s2, 2) }}</td>
-
-                    {{-- Bilan --}}
-                    <td style="font-weight: bold;">{{ $etudiant->evaluations->where('module_id', $moduleBilan->id)->first()?->note ?? '-' }}</td>
-                    
-                    {{-- Moyenne Générale --}}
-                    <td style="background-color: #f4cccc; font-weight: bold; color: #b91c1c;">
-                        {{ number_format($etudiant->calculerNoteFinale($anneeActive->id), 2) }}
-                    </td>
-                </tr>
+        <tr class="bg-green">
+            {{-- Boucle S1 avec filter --}}
+            @foreach($modulesNormaux->filter(fn($m) => $m->pivot->semestre == 1 || $m->pivot->semestre == 'S1') as $mod)
+                <th class="vertical-text">
+                    <span class="module-code">{{ $mod->code_module }}</span>
+                </th>
             @endforeach
-        </tbody>
-    </table>
 
+            {{-- Boucle S2 avec filter --}}
+            @foreach($modulesNormaux->filter(fn($m) => $m->pivot->semestre == 2 || $m->pivot->semestre == 'S2') as $mod)
+                <th class="vertical-text">
+                    <span class="module-code">{{ $mod->code_module }}</span>
+                </th>
+            @endforeach
+        </tr>
+    </thead>
+    
+    <tbody>
+        @foreach($etudiants as $index => $etudiant)
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td class="text-left"><strong>{{ $etudiant->name }}</strong></td>
+                
+                {{-- Notes S1 --}}
+                @foreach($modulesNormaux->filter(fn($m) => $m->pivot->semestre == 1 || $m->pivot->semestre == 'S1') as $mod)
+                    @php $eval = $etudiant->evaluations->where('module_id', $mod->id)->first(); @endphp
+                    <td>{{ $eval ? number_format($eval->note, 0) : '-' }}</td>
+                @endforeach
+                
+                <td class="bg-grey"><strong>{{ number_format($etudiant->moyenne_s1, 2) }}</strong></td>
 
+                {{-- Notes S2 --}}
+                @foreach($modulesNormaux->filter(fn($m) => $m->pivot->semestre == 2 || $m->pivot->semestre == 'S2') as $mod)
+                    @php $eval = $etudiant->evaluations->where('module_id', $mod->id)->first(); @endphp
+                    <td>{{ $eval ? number_format($eval->note, 0) : '-' }}</td>
+                @endforeach
+
+                <td class="bg-grey"><strong>{{ number_format($etudiant->moyenne_s2, 2) }}</strong></td>
+
+                {{-- Note Bilan --}}
+                <td style="font-weight: bold;">
+                    @php 
+                        $noteBilan = $etudiant->evaluations->where('module_id', $moduleBilan->id)->first()?->note; 
+                    @endphp
+                    {{ $noteBilan !== null ? number_format($noteBilan, 2) : '-' }}
+                </td>
+                
+                <td style="background-color: #fce5cd; font-weight: bold; color: #b91c1c;">
+                    {{ number_format($etudiant->moyenne_generale, 2) }}
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 {{-- Section Statistiques --}}
    {{-- Section Statistiques --}}
     <div style="margin-top: 20px; width: 50%; float: left;">

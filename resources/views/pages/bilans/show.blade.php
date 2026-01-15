@@ -11,7 +11,7 @@
             Retour à la synthèse
         </a>
         <div class="flex gap-2">
-            <a href="{{ route('releve.pdf', $etudiant->id) }}" class="bg-green-700 text-white px-4 py-2 rounded shadow hover:bg-green-800 transition text-sm font-bold">
+            <a href="{{ route('bilan.releve.pdf', $etudiant->id) }}" class="bg-green-700 text-white px-4 py-2 rounded shadow hover:bg-green-800 transition text-sm font-bold">
                 📥 Télécharger PDF
             </a>
         </div>
