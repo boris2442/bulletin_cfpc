@@ -175,7 +175,7 @@
 </div>
         <main class="flex-grow">
             {{-- HERO SECTION --}}
-            <section class="pt-16 md:py-24 px-4 md:px-8 pb-0">
+            <section class="pt-16 md:py-24 px-4 md:px-8 pb-12">
                 <div class="container  ">
                     <h1 class="text-4xl md:text-6xl font-black text-gray-900 dark:text-white leading-tight mb-6">
                         La <span class="text-indigo-600">Gestion Académique</span><br>enfin simplifiée.
