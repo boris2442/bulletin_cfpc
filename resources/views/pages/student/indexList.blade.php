@@ -4,7 +4,7 @@
 <div class="ml-64 p-8 mt-10">
 
     {{-- Entête --}}
-    <div class="flex justify-between items-end mb-8">
+    {{-- <div class="flex justify-between items-end mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Gestion des Étudiants</h1>
             <p class="text-sm text-gray-500">Session active : <span class="text-blue-600 font-bold">{{ $anneeActive->libelle ?? 'N/A' }}</span></p>
@@ -12,10 +12,79 @@
         <div class="text-sm text-gray-400">
             {{ $students->total() }} étudiant(s) trouvé(s)
         </div>
+    </div> --}}
+
+
+
+
+
+
+
+
+
+{{-- Entête --}}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Gestion des Étudiants</h1>
+        <p class="text-sm text-gray-500">Session active : <span class="text-blue-600 font-bold">{{ $anneeActive->libelle ?? 'N/A' }}</span></p>
     </div>
+
+    {{-- Menu 3 points Global --}}
+    <div x-data="{ openGlobal: false }" class="relative">
+        <button @click="openGlobal = !openGlobal" @click.away="openGlobal = false" 
+                class="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 transition shadow-sm">
+            <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+            </svg>
+        </button>
+
+        {{-- Dropdown Global --}}
+        <div x-show="openGlobal" 
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="transform opacity-0 scale-95"
+             x-transition:enter-end="transform opacity-100 scale-100"
+             class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden">
+            
+            <div class="py-2">
+                <a href="{{ route('students.create') }}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 group">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <span class="font-semibold">Nouvel Étudiant</span>
+                </a>
+
+                {{-- Tu peux ajouter d'autres actions globales ici plus tard --}}
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <div class="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                    </div>
+                    <span>Exporter la liste (Excel)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
     {{-- Zone de Filtres --}}
     <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm mb-8 border border-gray-100 dark:border-gray-700">
+        <div class="text-sm text-gray-400">
+            {{ $students->total() }} étudiant(s) trouvé(s)
+        </div>
         <form action="{{ route('students.indexList') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             
             {{-- Recherche --}}

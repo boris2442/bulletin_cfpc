@@ -1944,6 +1944,11 @@ namespace App\Models {
     /**
      * App\Models\User
      *
+     * @property string|null $photo
+     * @property string|null $adresse
+     * @property string|null $telephone
+     * @property string|null $lieu_naissance
+     * @property string|null $date_naissance
      * @property \Illuminate\Support\Carbon|null $deleted_at
      * @property mixed $role
      * @property mixed $sexe
@@ -1977,6 +1982,11 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereSexe($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRole($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereDeletedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereDateNaissance($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereLieuNaissance($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereTelephone($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereAdresse($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhoto($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User query()

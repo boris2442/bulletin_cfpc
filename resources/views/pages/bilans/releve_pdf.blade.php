@@ -62,6 +62,33 @@
             <td>Matricule / ID: <span class="bold">{{ $etudiant->matricule ?? str_pad($etudiant->id, 4, '0', STR_PAD_LEFT) }}</span></td>
             <td class="text-right">Spécialité: <span class="bold">{{ $etudiant->inscriptions->first()->specialite->nom_specialite ?? 'N/A' }}</span></td>
         </tr>
+
+
+{{-- NOUVELLES INFORMATIONS AJOUTÉES --}}
+        <tr>
+            <td colspan="2" style="padding-top: 5px;">
+                @if($etudiant->date_naissance)
+                    Né(e) le / Born on: <span class="bold">{{ \Carbon\Carbon::parse($etudiant->date_naissance)->format('d/m/Y') }}</span>
+                @endif
+                
+                @if($etudiant->lieu_naissance)
+                    à / at: <span class="bold">{{ $etudiant->lieu_naissance }}</span>
+                @endif
+
+                @if($etudiant->sexe)
+                    | Sexe: <span class="bold">{{ $etudiant->sexe }}</span>
+                @endif
+
+                @if($etudiant->telephone)
+                    | Tél: <span class="bold">{{ $etudiant->telephone }}</span>
+                @endif
+            </td>
+        </tr>
+
+
+
+
+
     </table>
 
   <table class="notes-table">

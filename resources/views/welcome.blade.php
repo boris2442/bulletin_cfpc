@@ -139,15 +139,15 @@
 
         <main class="flex-grow">
             {{-- HERO SECTION --}}
-            <section class="py-16 md:py-24 px-4 ">
-                <div class="container mx-auto text-center">
+            <section class="pt-16 md:py-24 px-4 md:px-8 pb-0">
+                <div class="container  ">
                     <h1 class="text-4xl md:text-6xl font-black text-gray-900 dark:text-white leading-tight mb-6">
                         La <span class="text-indigo-600">Gestion Académique</span><br>enfin simplifiée.
                     </h1>
-                    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl  mb-10 leading-relaxed">
                         Optimisez chaque étape de votre année scolaire, de l'inscription à la génération des bilans de compétences avec une précision chirurgicale.
                     </p>
-                    <div class="flex flex-wrap justify-center gap-4">
+                    <div class="flex flex-wrap  gap-4">
                         <a href="#" class="px-8 py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1">
                             Commencer maintenant
                         </a>
@@ -159,7 +159,7 @@
             </section>
 
             {{-- FORMULE DE CALCUL --}}
-            <section class="py-16 container mx-auto px-4">
+            <section class="py-16 container mx-auto px-4 pt-0">
                 <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border dark:border-gray-700 flex flex-col lg:flex-row">
                     <div class="lg:w-1/2 p-10">
                         <h2 class="text-3xl font-bold mb-6">Calcul Automatique & Équitable</h2>

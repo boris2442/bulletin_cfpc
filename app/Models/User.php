@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +24,12 @@ class User extends Authenticatable
         'email',
         'password',
         'sexe',
-        'role'
+        'role',
+
+        'date_naissance', // Doit être ici
+        'lieu_naissance', // Doit être ici
+        'telephone',      // Doit être ici
+        'photo',
     ];
 
     /**
@@ -156,32 +162,6 @@ class User extends Authenticatable
 
 
 
-    //     public function moyenneSemestre($semestreLabel, $annee_id)
-    // {
-    //     // On récupère les évaluations de l'étudiant pour l'année donnée
-    //     $evals = $this->evaluations()
-    //         ->where('annee_academique_id', $annee_id)
-    //         ->whereHas('module', function ($q) use ($semestreLabel) {
-    //             $q->where('is_bilan', false)
-    //               ->where('semestre', $semestreLabel); // On filtre sur le semestre défini dans le MODULE
-    //         })->get();
-
-    //     $somme = 0;
-    //     $totalCoef = 0;
-
-    //     foreach ($evals as $ev) {
-    //         // Sécurité : on vérifie que le module existe
-    //         if ($ev->module) {
-    //             $coef = $ev->module->coef_module ?? 1;
-    //             $somme += ($ev->note * $coef);
-    //             $totalCoef += $coef;
-    //         }
-    //     }
-
-    //     return $totalCoef > 0 ? $somme / $totalCoef : 0;
-    // }
-
-
     public function moyenneSemestre($semestreInput, $annee_id)
     {
         // ÉTAPE 1 : Normalisation du semestre
@@ -214,5 +194,29 @@ class User extends Authenticatable
         }
 
         return $totalCoef > 0 ? $somme / $totalCoef : 0;
+    }
+
+
+
+    public static function getSexeEnumValues()
+    {
+        // Correction : On passe la chaîne directement sans DB::raw()
+        $columns = DB::select("SHOW COLUMNS FROM users WHERE Field = 'sexe'");
+
+        if (empty($columns)) {
+            return [];
+        }
+
+        $type = $columns[0]->Type;
+
+        // Extrait les valeurs entre parenthèses
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+
+        $values = [];
+        foreach (explode(',', $matches[1]) as $value) {
+            $values[] = trim($value, "'");
+        }
+
+        return $values;
     }
 }

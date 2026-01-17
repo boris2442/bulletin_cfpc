@@ -147,5 +147,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/students/create', [StudentController::class, 'create'])->name('students.create')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);;
+Route::post('/students/store', [StudentController::class, 'store'])->name('students.store')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);;
+
+
 
 require __DIR__ . '/auth.php';
