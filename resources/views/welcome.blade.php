@@ -38,49 +38,63 @@
         body { overflow-x: hidden; }
     </style>
     
-    <script>
-        // Script initial pour éviter le flash de contenu non stylisé (FOUC)
-        const rootHtml = document.documentElement;
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            rootHtml.classList.add('dark');
-        } else {
-            rootHtml.classList.remove('dark');
-        }
+   <script>
+    // 1. Gestion du Dark Mode (S'exécute immédiatement pour éviter le flash blanc)
+    const rootHtml = document.documentElement;
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        rootHtml.classList.add('dark');
+    } else {
+        rootHtml.classList.remove('dark');
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggleBtn = document.getElementById('theme-toggle-btn');
-            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-            
+    // 2. Initialisation des interactions après le chargement du HTML
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- GESTION DU DARK MODE (Bouton) ---
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        
+        if (themeToggleBtn) {
             // Mise à jour de l'icône au chargement
             if (rootHtml.classList.contains('dark')) {
-                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleLightIcon?.classList.remove('hidden');
             } else {
-                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleDarkIcon?.classList.remove('hidden');
             }
 
             themeToggleBtn.addEventListener('click', function() {
-                // Ajout temporaire de la transition
                 rootHtml.classList.add('dark-mode-transition');
-                
-                themeToggleDarkIcon.classList.toggle('hidden');
-                themeToggleLightIcon.classList.toggle('hidden');
-
+                themeToggleDarkIcon?.classList.toggle('hidden');
+                themeToggleLightIcon?.classList.toggle('hidden');
                 rootHtml.classList.toggle('dark');
                 
-                if (rootHtml.classList.contains('dark')) {
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    localStorage.setItem('color-theme', 'light');
-                }
+                localStorage.setItem('color-theme', rootHtml.classList.contains('dark') ? 'dark' : 'light');
 
-                // Retirer la transition après un court délai
-                setTimeout(() => {
-                    rootHtml.classList.remove('dark-mode-transition');
-                }, 300);
+                setTimeout(() => rootHtml.classList.remove('dark-mode-transition'), 300);
             });
-        });
-    </script>
+        }
+
+        // --- GESTION DU MENU MOBILE ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Empêche des bugs de clic
+                mobileMenu.classList.toggle('hidden');
+                //console.log("Menu mobile cliqué !"); // Tu verras ça dans F12
+            });
+
+            // Optionnel : Fermer le menu si on clique n'importe où ailleurs sur l'écran
+            document.addEventListener('click', function(e) {
+                if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
       <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
@@ -136,7 +150,29 @@
                 </div>
             </div>
         </header>
-
+{{-- MENU MOBILE --}}
+{{-- MENU MOBILE --}}
+<div id="mobile-menu" class="hidden md:hidden absolute top-[64px] left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b dark:border-gray-700 px-6 py-8 space-y-6 shadow-2xl z-40 animate-in fade-in slide-in-from-top-5 duration-300">
+    @if (Route::has('login'))
+        <nav class="flex flex-col space-y-4">
+            @auth
+                <a href="{{ url('/dashboard') }}" class="text-lg font-semibold text-indigo-600 dark:text-indigo-400">Tableau de bord</a>
+                <div class="h-px bg-gray-100 dark:bg-gray-800"></div>
+                <a href="{{ route('logout') }}" 
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                   class="text-lg font-semibold text-red-500 flex items-center">
+                   <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                   Déconnexion
+                </a>
+            @else
+                <a href="{{ route('login') }}" class="text-lg font-medium text-gray-700 dark:text-gray-200">Connexion</a>
+                <a href="{{ route('register') }}" class="w-full py-4 bg-indigo-600 text-white rounded-xl text-center font-bold shadow-lg shadow-indigo-200 dark:shadow-none transition-active">
+                 créer un compte
+                </a>
+            @endauth
+        </nav>
+    @endif
+</div>
         <main class="flex-grow">
             {{-- HERO SECTION --}}
             <section class="pt-16 md:py-24 px-4 md:px-8 pb-0">
@@ -296,5 +332,9 @@
     </div>
 </footer>
     </div>
+    {{-- Formulaire de déconnexion invisible --}}
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
 </body>
 </html>
