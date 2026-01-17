@@ -108,7 +108,7 @@
                     <nav class="hidden md:flex items-center space-x-8">
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="text-sm font-semibold hover:text-indigo-600 transition">Dashboard</a>
+                                <a href="{{ url('/dashboard') }}" class="text-sm font-semibold text-indigo-600 transition">Dashboard</a>
                                 <a href="{{ route('logout') }}" 
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                    class="text-sm font-bold text-red-500 hover:text-red-600 transition flex items-center">
@@ -116,7 +116,7 @@
                                    Quitter
                                 </a>
                             @else
-                                <a href="{{ route('login') }}" class="text-sm font-medium hover:text-indigo-600">Connexion</a>
+                                <a href="{{ route('login') }}" class="text-sm font-medium text-indigo-600">Connexion</a>
                                 @if (Route::has('register'))
                                     <a href="{{ route('register') }}" class="py-2 px-5 bg-indigo-600 text-white rounded-lg text-sm font-bold shadow-md hover:bg-indigo-700 transition">Inscription</a>
                                 @endif
