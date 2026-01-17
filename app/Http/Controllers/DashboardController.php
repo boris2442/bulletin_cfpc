@@ -59,46 +59,7 @@ class DashboardController extends Controller
         ];
     }
 
-    // private function getPerformanceAcademique($anneeId)
-    // {
-    //     $inscriptions = Inscription::where('annee_academique_id', $anneeId)
-    //         ->with('etudiant.evaluations.module')
-    //         ->get();
-
-    //     $admis = 0;
-    //     $totalNotes = 0;
-    //     $majors = [];
-
-    //     foreach ($inscriptions as $ins) {
-    //         $moyenne = $ins->etudiant->calculerNoteFinale($anneeId);
-    //         $totalNotes += $moyenne;
-
-    //         if ($moyenne >= 12) $admis++; // Seuil de réussite à 12/20
-
-    //         // Préparation pour le Top 5
-    //         $majors[] = [
-    //             'nom' => $ins->etudiant->name,
-    //             'moyenne' => round($moyenne, 2),
-    //             'specialite' => $ins->specialite->nom_specialite
-    //         ];
-    //     }
-
-    //     // Trier pour avoir les meilleurs en premier
-    //     usort($majors, fn($a, $b) => $b['moyenne'] <=> $a['moyenne']);
-
-    //     return [
-    //         'taux_reussite' => $inscriptions->count() > 0 ? round(($admis / $inscriptions->count()) * 100, 2) : 0,
-    //         'moyenne_generale' => $inscriptions->count() > 0 ? round($totalNotes / $inscriptions->count(), 2) : 0,
-    //         'top_etudiants' => array_slice($majors, 0, 5) // On ne garde que les 5 premiers
-    //     ];
-    // }
-
-
-
-
-
-
-
+   
 
 private function getPerformanceAcademique($anneeId)
 {
@@ -181,19 +142,12 @@ private function getPerformanceAcademique($anneeId)
 
     private function getComparatifFilieres($anneeId)
     {
-        // $specialites = Inscription::where('annee_academique_id', $anneeId)
-        //     ->with('specialite', 'etudiant')
-        //     ->get()
-        //     ->groupBy('specialite.nom_specialite');
-
+     
         $specialites = Inscription::where('annee_academique_id', $anneeId)
             // Ajoute .evaluations.module ici pour la performance
             ->with(['specialite', 'etudiant.evaluations.module'])
             ->get()
             ->groupBy('specialite.nom_specialite');
-
-
-
 
 
         $performanceFiliere = [];

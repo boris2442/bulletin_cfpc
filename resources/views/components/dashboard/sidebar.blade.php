@@ -141,8 +141,6 @@
             <span>Bilan general</span>
         </a>
       
-
-
         <!-- Inscriptions -->
         <a href="{{ route('inscriptions.index') }}"
             title=" Inscriptions  "
