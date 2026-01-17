@@ -18,7 +18,7 @@
                     @if (Auth::user()->role!='Etudiant')
                         
                  
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                    <x-nav-link :href="route('tableau-de-bord')" :active="request()->routeIs('tableau-de-bord')">
                         {{ __('Tableau de board') }}
                     </x-nav-link>
                        @endif
@@ -99,7 +99,7 @@
         </div>
              @if (Auth::user()->role!='Etudiant')
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+            <x-responsive-nav-link :href="route('tableau-de-bord')" :active="request()->routeIs('tableau-de-bord')">
                 {{ __('Tableau de bord personnalisé') }}
             </x-responsive-nav-link>
         </div>
