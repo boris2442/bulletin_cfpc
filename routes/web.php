@@ -58,7 +58,7 @@ Route::prefix('inscriptions')->name('inscriptions.')->group(function () {
 
 Route::prefix('evaluations')->name('evaluations.')->group(function () {
     // Route pour afficher la page de saisie et filtrer
-    Route::get('/', [EvaluationController::class, 'index'])->name('index');
+    Route::get('/', [EvaluationController::class, 'index'])->name('index')->middleware(['auth']);
 
     // Route pour enregistrer les notes en masse
     Route::post('/store', [EvaluationController::class, 'store'])->name('store');
