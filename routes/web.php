@@ -41,6 +41,7 @@ Route::middleware(['web', 'auth', 'role:Administrateur'])->group(function () {
 
     // Route Resource pour la gestion des Spécialités
     Route::resource('specialites', SpecialiteController::class);
+    Route::post('/specialites/import', [SpecialiteController::class, 'import'])->name('specialites.import');
     // Routes pour la gestion des Modules
     Route::resource('modules', ModuleController::class);
 });
@@ -149,7 +150,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/students/create', [StudentController::class, 'create'])->name('students.create')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);;
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store')->middleware(['web', 'auth', 'role:Administrateur,secretaire']);;
-
-
+Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
 
 require __DIR__ . '/auth.php';

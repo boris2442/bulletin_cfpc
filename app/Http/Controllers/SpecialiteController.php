@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Specialite;
 use Illuminate\Http\Request;
+use App\Imports\SpecialitesImport;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\SpecialiteRequest;
 
 class SpecialiteController extends Controller
@@ -70,5 +73,18 @@ class SpecialiteController extends Controller
             return redirect()->route('specialites.index')
                 ->with('error', 'Impossible de supprimer cette spécialité car elle contient des modules.');
         }
+    }
+
+
+    //import specialite
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        Excel::import(new SpecialitesImport, $request->file('file'));
+
+        return back()->with('success', 'Toutes les spécialités ont été importées !');
     }
 }

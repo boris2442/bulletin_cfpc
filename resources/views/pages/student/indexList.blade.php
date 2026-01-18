@@ -3,25 +3,7 @@
 @section('content')
 <div class="ml-64 p-8 mt-10">
 
-    {{-- Entête --}}
-    {{-- <div class="flex justify-between items-end mb-8">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Gestion des Étudiants</h1>
-            <p class="text-sm text-gray-500">Session active : <span class="text-blue-600 font-bold">{{ $anneeActive->libelle ?? 'N/A' }}</span></p>
-        </div>
-        <div class="text-sm text-gray-400">
-            {{ $students->total() }} étudiant(s) trouvé(s)
-        </div>
-    </div> --}}
-
-
-
-
-
-
-
-
-
+ {{-- Entête --}}
 {{-- Entête --}}
 <div class="flex justify-between items-center mb-8">
     <div>
@@ -62,7 +44,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                     </div>
-                    <span>Exporter la liste (Excel)</span>
+                    <span>Importer la liste (Excel)</span>
                 </a>
             </div>
         </div>
@@ -150,14 +132,15 @@
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                             {{ $insc->specialite->nom_specialite ?? 'Non définie' }}
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition">
-                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
-                        </td>
+                    <td class="px-6 py-4 text-right">
+    <a href="{{ route('students.show', $student->id) }}" 
+       class="p-2 inline-block hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition group">
+        <svg class="w-5 h-5 text-gray-500 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+    </a>
+</td>
                     </tr>
                 @empty
                     <tr>

@@ -16,7 +16,7 @@
                 <!-- Logo ou titre -->
                 <a href="{{ route('dashboard') }}" class="flex ml-2 md:mr-24">
                     <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-800 dark:text-white">
-                        {{ config('app.name', 'Evaluations') }}
+                        {{-- {{ config('app.name', 'Evaluations') }} --}}
                     </span>
                 </a>
             </div>

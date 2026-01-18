@@ -11,6 +11,7 @@ use App\Models\AnneeAcademique;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -104,55 +105,6 @@ class StudentController extends Controller
     }
 
     //store method to save new student
-    // public function store(Request $request)
-    // {
-    //     // 1. Validation (On ne valide pas le matricule ici s'il est auto-généré)
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|email|unique:users,email',
-    //         'sexe' => 'required|in:Masculin,Féminin',
-    //         'date_naissance' => 'required|date',
-    //         'lieu_naissance' => 'required|string',
-    //         'specialite_id' => 'required|exists:specialites,id',
-    //         'telephone' => 'nullable|string',
-    //     ]);
-
-    //     // 2. Utilisation d'une Transaction DB pour éviter de créer un user sans inscription
-    //     return DB::transaction(function () use ($request) {
-
-    //         // 3. Récupération de l'année active (indispensable pour l'inscription)
-    //         $anneeActive = AnneeAcademique::where('statut', true)->first();
-
-    //         if (!$anneeActive) {
-    //             return back()->with('error', "Aucune année académique active n'a été trouvée.");
-    //         }
-
-    //         // 4. Création de l'étudiant
-    //         // Le matricule sera généré par ton système existant (Model Boot ou autre)
-    //         $user = User::create([
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'password' => Hash::make('password123'), // Mot de passe par défaut
-    //             'sexe' => $request->sexe,
-    //             'role' => 'Etudiant', // On force le rôle
-    //             'date_naissance' => $request->date_naissance,
-    //             'lieu_naissance' => $request->lieu_naissance,
-    //             'telephone' => $request->telephone,
-    //         ]);
-
-    //         // 5. Création de l'inscription liée
-    //         Inscription::create([
-    //             'user_id' => $user->id,
-    //             'specialite_id' => $request->specialite_id,
-    //             'annee_academique_id' => $anneeActive->id,
-    //             'date_inscription' => now(),
-    //         ]);
-
-    //         return redirect()->route('students.indexList')
-    //             ->with('success', "L'étudiant {$user->name} a été créé avec succès.");
-    //     });
-    // }
-
 
 
     // store method to save new student
@@ -214,6 +166,87 @@ class StudentController extends Controller
 
             return redirect()->route('students.indexList')
                 ->with('success', "L'étudiant {$user->name} a été créé avec succès.");
+        });
+    }
+
+    public function show(User $student)
+    {
+        // On charge l'inscription et la spécialité pour éviter les erreurs dans la vue
+        $student->load('inscriptions.specialite');
+
+        return view('pages.student.show', compact('student'));
+    }
+
+
+
+    // Affiche le formulaire avec les données existantes
+    public function edit(User $student)
+    {
+        $specialites = Specialite::all();
+        $sexes = User::getSexeEnumValues();
+
+        // On récupère l'ID de la spécialité actuelle via la dernière inscription
+        $currentSpecialiteId = $student->inscriptions()->latest()->first()?->specialite_id;
+
+        return view('pages.student.edit', compact('student', 'specialites', 'sexes', 'currentSpecialiteId'));
+    }
+
+    public function update(Request $request, User $student)
+    {
+        // 1. Validation (Email unique sauf pour cet utilisateur)
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $student->id,
+            'sexe' => 'required|in:Masculin,Féminin',
+            'date_naissance' => 'required|date',
+            'lieu_naissance' => 'required|string',
+            'specialite_id' => 'required|exists:specialites,id',
+            'telephone' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        return DB::transaction(function () use ($request, $student) {
+
+            // --- LOGIQUE IMAGE ---
+            if ($request->hasFile('photo')) {
+                // Supprimer l'ancienne photo si elle existe
+                if ($student->photo) {
+                    $oldPath = public_path('uploads/students/' . $student->photo);
+                    if (File::exists($oldPath)) {
+                        File::delete($oldPath);
+                    }
+                }
+
+                $file = $request->file('photo');
+                $photoName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/students'), $photoName);
+
+                // On met à jour le nom dans l'objet
+                $student->photo = $photoName;
+            }
+
+            // 2. Mise à jour de l'utilisateur
+            $student->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'sexe' => $request->sexe,
+                'date_naissance' => $request->date_naissance,
+                'lieu_naissance' => $request->lieu_naissance,
+                'telephone' => $request->telephone,
+                // La photo est déjà mise à jour dans l'objet si changée
+                'photo' => $student->photo,
+            ]);
+
+            // 3. Mise à jour de la spécialité (sur l'inscription la plus récente)
+            $inscription = $student->inscriptions()->latest()->first();
+            if ($inscription) {
+                $inscription->update([
+                    'specialite_id' => $request->specialite_id
+                ]);
+            }
+
+            return redirect()->route('students.indexList')
+                ->with('success', "Le profil de {$student->name} a été mis à jour.");
         });
     }
 }
