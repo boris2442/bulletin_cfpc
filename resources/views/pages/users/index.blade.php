@@ -83,7 +83,7 @@ ml-0 md:ml-64 min-h-screen  dark:bg-[#1F2937] antialiased transition-colors dura
         </div>
     </div>
 
-    {{-- MODALE D'IMPORTATION (Placée ici pour être liée au bouton) --}}
+    {{-- MODALE D'IMPORTATION --}}
     {{-- @include('pages.users.partials.import-modal')  --}}
     @include('pages.users.partials.import-modal')
     @if(session('error'))
