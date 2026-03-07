@@ -118,7 +118,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('bulk-restore', [UserController::class, 'bulkRestore'])->name('bulkRestore');
         Route::delete('bulk-force-delete', [UserController::class, 'bulkForceDelete'])->name('bulkForceDelete');
 
-        // --- Gestion de la Corbeille (Trash) ---
+        // --- Gestion de la Corbeille (Trash) -
         Route::get('trash', [UserController::class, 'trash'])->name('trash');
         Route::post('{id}/restore', [UserController::class, 'restore'])->name('restore');
         Route::delete('{id}/force-delete', [UserController::class, 'forceDelete'])->name('forceDelete');
