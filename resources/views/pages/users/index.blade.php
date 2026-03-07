@@ -98,32 +98,7 @@ ml-0 md:ml-64 min-h-screen  dark:bg-[#1F2937] antialiased transition-colors dura
 
 
         {{-- 3. BARRE DE RECHERCHE & BOUTON RÉINITIALISER --}}
-        {{-- <div class="flex flex-col md:flex-row gap-4 mb-8">
-
-
-        <form action="{{ route('users.index') }}" method="GET" class="relative flex-1 group">
-                <input type="text" name="search" value="{{ request('search') }}" 
-                       placeholder="Rechercher par nom ou email..." 
-                       class="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl pl-5 pr-14 py-3.5 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all shadow-sm">
-                
-                <button type="submit" class="absolute right-2 top-1.5 p-2 text-gray-400 hover:text-blue-600 dark:hover:text-white transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </button>
-            </form> 
-
-
-
-
-            @if(request('search'))
-                <a href="{{ route('users.index') }}" 
-                   class="flex items-center justify-center gap-2 px-6 py-3.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold rounded-xl border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-all shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    Réinitialiser
-                </a>
-            @endif
-        </div> --}}
-
-
+      
 
 
 {{-- 3. BARRE DE RECHERCHE & FILTRES --}}
