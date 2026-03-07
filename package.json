@@ -20,6 +20,8 @@
     "dependencies": {
         "@tailwindcss/vite": "^4.1.18",
         "nprogress": "^0.2.0",
-        "tailwindcss": "^4.1.18"
+        "particles.js": "^2.0.0",
+        "tailwindcss": "^4.1.18",
+        "typed.js": "^3.0.0"
     }
 }

@@ -76,8 +76,6 @@ class User extends Authenticatable
     protected static function boot()
     {
         parent::boot();
-
-
         static::creating(function ($user) {
             if (empty($user->matricule) || str_contains($user->matricule, 'TEMP')) {
                 // ... ta logique de préfixe ...

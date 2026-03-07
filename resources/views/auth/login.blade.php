@@ -40,18 +40,18 @@
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Se connecter') }}
             </x-primary-button>
         </div>
         {{-- NOUVEAU : Lien d'inscription --}}
-        <div class="mt-8 text-center border-t border-gray-200 dark:border-gray-700 pt-6">
+        {{-- <div class="mt-8 text-center border-t border-gray-200 dark:border-gray-700 pt-6">
             <p class="text-sm text-gray-600 dark:text-gray-400">
                 {{ __("Vous n'avez pas encore de compte ?") }} 
-                <br class="sm:hidden"> {{-- Retour à la ligne uniquement sur mobile --}}
+                <br class="sm:hidden">
                 <a href="{{ route('register') }}" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition duration-150">
                     {{ __("Créer un compte gratuitement") }}
                 </a>
             </p>
-        </div>
+        </div> --}}
     </form>
 </x-guest-layout>
