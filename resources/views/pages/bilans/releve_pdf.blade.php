@@ -43,8 +43,8 @@
             </td>
             <td class="header-center">
                 {{-- Assure-toi que le logo est dans public/images/logo.jpg --}}
-                <img src="{{ public_path('images/logo.jpg') }}" class="logo"><br>
-                <span class="title-main">RELEVÉ DE NOTES</span>
+                <img src="{{ public_path('images/logo2.png') }}" class="logo"><br>
+                <span class="title-main">CARNET DE NOTES</span>
                 <span class="title-sub">ACADEMIC TRANSCRIPT</span>
             </td>
             <td class="header-side">
@@ -183,7 +183,9 @@
 
     <div class="signature-section">
         <div class="signature-box">
-            <p class="bold underline">LE SURVEILLANT GÉNÉRAL</p>
+            <p class="bold underline">
+                {{-- LE SURVEILLANT GÉNÉRAL --}}
+            </p>
         </div>
         <div class="signature-box">
             <p class="bold">RÉSULTAT:</p>

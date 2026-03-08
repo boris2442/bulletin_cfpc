@@ -45,7 +45,7 @@
         </td>
         <td width="30%" align="center">
             {{-- Logo avec fallback si image absente --}}
-            <img src="{{ public_path('images/logo.jpg') }}" style="height: 70px;">
+            <img src="{{ public_path('images/logo2.png') }}" style="height: 70px;">
         </td>
         <td width="35%" align="center" class="text-upper">
             REPUBLIC OF CAMEROON<br>Peace - Work - Fatherland<br>-------<br>

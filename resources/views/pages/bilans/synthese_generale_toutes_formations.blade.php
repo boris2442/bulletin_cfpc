@@ -42,7 +42,7 @@ tfoot { display: table-footer-group; }
     <table class="header-table">
         <tr>
             <td width="35%">REPUBLIQUE DU CAMEROUN<br>Paix - Travail - Patrie<br>-------<br>MINEFOP</td>
-            <td width="30%"><img src="{{ public_path('images/logo.jpg') }}" style="width: 50px;"></td>
+            <td width="30%"><img src="{{ public_path('images/logo2.png') }}" style="width: 50px;"></td>
             <td width="35%">REPUBLIC OF CAMEROON<br>Peace - Work - Fatherland<br>-------<br>MINEFOP</td>
         </tr>
     </table>

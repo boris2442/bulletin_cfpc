@@ -41,8 +41,8 @@
 
     {{-- Bloc Central : LOGO --}}
     <div class="text-center w-1/3 flex flex-col items-center justify-center">
-        <img src="{{ asset('images/logo.jpg') }}" class="w-24 h-24 object-contain mb-1">
-        <span class="font-black text-lg block leading-none border-t border-black pt-1">RELEVÉ DE NOTES</span>
+        <img src="{{ asset('images/logo2.png') }}" class="w-24 h-24 object-contain mb-1">
+        <span class="font-black text-lg block leading-none border-t border-black pt-1">CARNET DE NOTES</span>
         <span class="text-[9px] italic font-bold">ACADEMIC TRANSCRIPT</span>
     </div>
 
