@@ -553,15 +553,15 @@
                                 enfin simplifiée.
 
                             </h1>
-                           <p class="mt-4 text-gray-600 dark:text-gray-400         ">
+                            <p class="mt-4 text-gray-600 dark:text-gray-400         ">
                                 Optimisez chaque étape de votre année scolaire, de l'inscription à la génération des
                                 bilans de compétences avec une précision chirurgicale.
 
                             </p>
 
                             <p class="mt-4 text-gray-600 dark:text-gray-400         ">
-                                Optimisez chaque étape de votre année scolaire, de l'inscription à la génération des
-                                bilans de compétences avec une précision chirurgicale.
+                                Suivi en temps réel, analytics avancés et gestion des effectifs n'ont jamais été aussi
+                                simples à maîtriser.
 
                             </p>
 
@@ -682,7 +682,7 @@
                                             <div class="flex items-center space-x-2">
                                                 <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
                                                 <div>
-                                                    <div class="text-xs font-medium dark:text-white">Jean Dupont</div>
+                                                    <div class="text-xs font-medium dark:text-white">Martin Simo</div>
                                                     <div class="text-[10px] text-gray-500">Mathématiques</div>
                                                 </div>
                                             </div>
@@ -694,7 +694,7 @@
                                             <div class="flex items-center space-x-2">
                                                 <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
                                                 <div>
-                                                    <div class="text-xs font-medium dark:text-white">Marie Martin</div>
+                                                    <div class="text-xs font-medium dark:text-white">Marie Lienou</div>
                                                     <div class="text-[10px] text-gray-500">Physique</div>
                                                 </div>
                                             </div>
@@ -706,7 +706,7 @@
                                             <div class="flex items-center space-x-2">
                                                 <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
                                                 <div>
-                                                    <div class="text-xs font-medium dark:text-white">Pierre Durand
+                                                    <div class="text-xs font-medium dark:text-white">Pierre Rostand
                                                     </div>
                                                     <div class="text-[10px] text-gray-500">Informatique</div>
                                                 </div>
@@ -731,24 +731,24 @@
             </section>
 
             {{-- STATS BANNER --}}
-            <section class="scroll-animate py-12 bg-indigo-50 dark:bg-indigo-900/20">
+            <section class="scroll-animate py-12  ">
                 <div class="container mx-auto px-4">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div class="p-4">
+                        <div class="p-4 dark:bg-[#EEF2FF] rounded-2xl border dark:border-gray-700">
                             <div class="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400">50+</div>
                             <div class="text-xs text-gray-600 dark:text-gray-400">Établissements</div>
                         </div>
-                        <div class="p-4">
+                        <div class="p-4 dark:bg-[#EEF2FF] rounded-2xl border dark:border-gray-700">
                             <div class="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400">10k+
                             </div>
                             <div class="text-xs text-gray-600 dark:text-gray-400">Étudiants</div>
                         </div>
-                        <div class="p-4">
+                        <div class="p-4 dark:bg-[#EEF2FF] rounded-2xl border dark:border-gray-700">
                             <div class="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400">500+
                             </div>
                             <div class="text-xs text-gray-600 dark:text-gray-400">Enseignants</div>
                         </div>
-                        <div class="p-4">
+                        <div class="p-4 dark:bg-[#EEF2FF] rounded-2xl border dark:border-gray-700">
                             <div class="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400">98%</div>
                             <div class="text-xs text-gray-600 dark:text-gray-400">Satisfaction</div>
                         </div>
@@ -947,7 +947,7 @@
     </form>
 
 
-<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
     <script>
         particlesJS("particles-js", {
             particles: {

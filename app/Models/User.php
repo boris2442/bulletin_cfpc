@@ -154,12 +154,6 @@ class User extends Authenticatable
     }
 
 
-
-
-
-
-
-
     public function moyenneSemestre($semestreInput, $annee_id)
     {
         // ÉTAPE 1 : Normalisation du semestre
