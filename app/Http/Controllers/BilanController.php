@@ -13,6 +13,7 @@ use App\Models\AnneeAcademique;
 use App\Models\BilanCompetence;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 class BilanController extends Controller
 {
@@ -40,7 +41,12 @@ class BilanController extends Controller
             $stats = $data['stats'];
         }
 
-        return view('pages.bilans.index', compact('etudiants', 'modulesNormaux', 'moduleBilan', 'specialites', 'anneeActive', 'stats'));
+
+
+        // $environment = App::environment();
+        // dd($environment);
+
+        return view('pages.bilans.index', compact('etudiants', 'modulesNormaux', 'moduleBilan', 'specialites', 'anneeActive', 'stats', ));
     }
 
 
