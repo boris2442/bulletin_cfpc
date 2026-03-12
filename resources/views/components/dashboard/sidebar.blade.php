@@ -174,7 +174,7 @@
                 class="flex items-center w-full py-2.5 px-4 rounded-lg transition duration-200
                            bg-red-500 hover:bg-red-600 text-white dark:hover:bg-red-700">
                 <i class="fas fa-sign-out-alt mr-3"></i>
-                <span>Déconnexion</span>
+                <span class="sidebar-label  transition-all duration-300">Déconnexion</span>
             </button>
         </form>
     </nav>
