@@ -47,7 +47,7 @@ class="ml-0 md:ml-64 min-h-screen  dark:bg-[#1F2937] antialiased transition-colo
             </div>
             <div>
                 <p class="text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider">Inscriptions</p>
-                <h2 class="text-xl md:text-3xl font-black dark:text-white">{{ $statsGlobales['total_etudiants'] }}</h2>
+                <h2 class="text-xl md:text-3xl font-black dark:text-white ">{{ $statsGlobales['total_etudiants'] }}</h2>
             </div>
         </div>
     </div>
